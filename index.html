@@ -989,5 +989,269 @@ mobMenu.addEventListener('click',function(e){
   if(e.target===mobMenu) closeMenu();
 });
 </script>
+
+<!-- ══════════════════════════════════════════
+     CHAT WIDGET — TƯ VẤN AI MỘC TÂM THANG
+══════════════════════════════════════════ -->
+<style>
+#spa-chat-fab{position:fixed;bottom:24px;right:20px;z-index:10000;}
+.fab-btn{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#1a6fff,#0047cc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,100,255,.45);animation:pulse-fab 2.5s ease infinite;position:relative;-webkit-tap-highlight-color:transparent;}
+.fab-btn:active{transform:scale(.92);}
+@keyframes pulse-fab{0%,100%{box-shadow:0 4px 20px rgba(0,100,255,.45),0 0 0 0 rgba(0,100,255,.35);}50%{box-shadow:0 4px 24px rgba(0,100,255,.5),0 0 0 10px rgba(0,100,255,0);}}
+.fab-icon-chat,.fab-icon-close{position:absolute;transition:opacity .25s,transform .25s;}
+.fab-icon-chat{opacity:1;transform:scale(1);}
+.fab-icon-close{opacity:0;transform:scale(.6) rotate(-90deg);}
+#spa-chat-fab.open .fab-icon-chat{opacity:0;transform:scale(.6) rotate(90deg);}
+#spa-chat-fab.open .fab-icon-close{opacity:1;transform:scale(1) rotate(0deg);}
+.fab-tooltip{position:absolute;right:68px;bottom:10px;background:#fff;color:#333;font-size:12px;font-weight:600;font-family:'Be Vietnam Pro',sans-serif;white-space:nowrap;padding:7px 12px;border-radius:20px;box-shadow:0 3px 12px rgba(0,0,0,.18);pointer-events:none;opacity:0;transform:translateX(8px);transition:all .3s;}
+.fab-tooltip::after{content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right:0;border-left-color:#fff;}
+#spa-chat-fab:not(.open) .fab-tooltip{animation:tooltip-show .5s 1.8s ease both;}
+@keyframes tooltip-show{from{opacity:0;transform:translateX(8px);}to{opacity:1;transform:translateX(0);}}
+.chat-window{position:absolute;bottom:70px;right:0;width:320px;max-height:490px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.22);display:flex;flex-direction:column;overflow:hidden;transform-origin:bottom right;transform:scale(.85) translateY(12px);opacity:0;pointer-events:none;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;}
+#spa-chat-fab.open .chat-window{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+.chat-header{background:linear-gradient(135deg,#1a6fff,#0047cc);padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.chat-avatar{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:2px solid rgba(255,255,255,.35);}
+.chat-header-name{font-size:13px;font-weight:700;color:#fff;font-family:'Be Vietnam Pro',sans-serif;}
+.chat-header-status{font-size:10.5px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px;margin-top:2px;font-family:'Be Vietnam Pro',sans-serif;}
+.status-dot{width:6px;height:6px;background:#4dff91;border-radius:50%;box-shadow:0 0 5px #4dff91;animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.chat-messages{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px;background:#f7f8fc;scroll-behavior:smooth;}
+.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-messages::-webkit-scrollbar-thumb{background:#d0d4e0;border-radius:2px;}
+.cmsg{max-width:88%;animation:msg-in .3s ease both;}
+@keyframes msg-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.cmsg.bot{align-self:flex-start;}
+.cmsg.user{align-self:flex-end;}
+.cmsg-bubble{padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.55;font-family:'Be Vietnam Pro',sans-serif;}
+.cmsg.bot .cmsg-bubble{background:#fff;color:#1a1f2e;border-radius:4px 14px 14px 14px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.cmsg.user .cmsg-bubble{background:linear-gradient(135deg,#1a6fff,#0047cc);color:#fff;border-radius:14px 14px 4px 14px;}
+.typing-dots{display:flex;gap:4px;padding:10px 14px;background:#fff;border-radius:4px 14px 14px 14px;width:fit-content;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.typing-dots span{width:6px;height:6px;background:#aab;border-radius:50%;animation:dot-bounce 1.2s ease infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes dot-bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.quick-replies{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 10px;background:#f7f8fc;}
+.qr-btn{background:#fff;border:1.5px solid #1a6fff;color:#1a6fff;border-radius:20px;padding:5px 11px;font-size:11.5px;font-weight:600;font-family:'Be Vietnam Pro',sans-serif;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
+.qr-btn:active{background:#1a6fff;color:#fff;transform:scale(.96);}
+.chat-input-row{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-top:1px solid #eee;flex-shrink:0;}
+.chat-input{flex:1;border:1.5px solid #e0e4f0;border-radius:22px;padding:9px 14px;font-size:13px;font-family:'Be Vietnam Pro',sans-serif;outline:none;background:#f7f8fc;color:#1a1f2e;resize:none;max-height:80px;line-height:1.4;transition:border-color .2s;}
+.chat-input:focus{border-color:#1a6fff;background:#fff;}
+.chat-input::placeholder{color:#b0b5c8;}
+.send-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1a6fff,#0047cc);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s,opacity .15s;-webkit-tap-highlight-color:transparent;}
+.send-btn:active{transform:scale(.9);}
+.send-btn:disabled{opacity:.4;cursor:default;}
+.chat-powered{text-align:center;font-size:10px;color:#b0b5c8;font-family:'Be Vietnam Pro',sans-serif;padding:4px 0 8px;background:#fff;flex-shrink:0;}
+@media(max-width:380px){.chat-window{width:calc(100vw - 32px);right:-8px;}}
+</style>
+
+<div id="spa-chat-fab">
+  <div class="fab-tooltip">💬 Tư vấn miễn phí</div>
+  <div class="chat-window">
+    <div class="chat-header">
+      <div class="chat-avatar">🌿</div>
+      <div>
+        <div class="chat-header-name">Trợ lý Mộc Tâm Thang</div>
+        <div class="chat-header-status"><span class="status-dot"></span> Đang trực tuyến</div>
+      </div>
+    </div>
+    <div class="chat-messages" id="chat-msgs"></div>
+    <div class="quick-replies" id="quick-replies">
+      <button class="qr-btn" onclick="chatSendQuick(this)">💆 Đau vai gáy</button>
+      <button class="qr-btn" onclick="chatSendQuick(this)">😴 Mất ngủ, stress</button>
+      <button class="qr-btn" onclick="chatSendQuick(this)">🔥 Giác hơi là gì?</button>
+      <button class="qr-btn" onclick="chatSendQuick(this)">💰 Bảng giá dịch vụ</button>
+    </div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chat-input" placeholder="Nhắn tin tư vấn..." rows="1"
+        onkeydown="chatHandleKey(event)" oninput="chatAutoResize(this)"></textarea>
+      <button class="send-btn" id="send-btn" onclick="chatSendMsg()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="chat-powered">Powered by AI · Mộc Tâm Thang Spa</div>
+  </div>
+  <button class="fab-btn" onclick="chatToggle()" aria-label="Chat tư vấn">
+    <svg class="fab-icon-chat" width="26" height="26" viewBox="0 0 24 24" fill="none">
+      <path d="M21 15C21 15.53 20.79 16.04 20.41 16.41C20.04 16.79 19.53 17 19 17H7L3 21V5C3 4.47 3.21 3.96 3.59 3.59C3.96 3.21 4.47 3 5 3H19C19.53 3 20.04 3.21 20.41 3.59C20.79 3.96 21 4.47 21 5V15Z" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <svg class="fab-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </button>
+</div>
+
+<script>
+(function(){
+  const ZALO = 'https://zalo.me/0987500300';
+  const SYS  = `Bạn là chuyên viên tư vấn của spa Đông y Mộc Tâm Thang.
+Mục tiêu DUY NHẤT của bạn: → Dẫn dắt khách hàng theo quy trình tư vấn để ĐẶT LỊCH.
+Bạn KHÔNG được chỉ trả lời câu hỏi một cách bị động.
+
+🎯 NGUYÊN TẮC CỐT LÕI
+- Luôn dẫn dắt hội thoại (không chờ khách hỏi)
+- Mỗi câu trả lời phải đưa khách tiến gần hơn tới đặt lịch
+- Nếu khách chưa đặt lịch → tiếp tục hỏi và dẫn dắt
+- Không được dừng hội thoại khi chưa có CTA
+
+🎭 PHONG CÁCH
+- Xưng: "em" — Gọi: "chị" (hoặc "anh")
+- Giọng: nhẹ nhàng – tinh tế – chuyên viên thật
+- Trả lời ngắn gọn, tự nhiên
+
+📌 ENTRY CONTROL
+Khi khách chưa rõ nhu cầu hoặc trả lời mơ hồ, đưa ra lựa chọn:
+"Em hỗ trợ mình nhanh hơn, chị đang gặp tình trạng nào ạ:
+• Đau cổ vai gáy
+• Mất ngủ / stress
+• Muốn thư giãn / gội đầu dưỡng sinh"
+→ Ưu tiên câu hỏi dạng lựa chọn
+
+📌 FLOW BẮT BUỘC (KHÔNG ĐƯỢC BỎ QUA)
+Bước 1: Chào + hỏi tình trạng
+Bước 2: Khai thác sâu (ít nhất 2 câu hỏi)
+Bước 3: Nhận định nhẹ (chuẩn Đông y)
+Bước 4: Gợi ý liệu trình
+Bước 5: Hỏi để tiến tới đặt lịch
+Bước 6: Đề xuất khung giờ cụ thể
+Bước 7: Chốt lịch
+→ Nếu chưa đạt bước 7 → tiếp tục dẫn dắt. Mỗi lần trả lời chỉ làm 1 bước.
+
+📌 LUẬT QUAN TRỌNG
+- Luôn kết thúc bằng 1 câu hỏi
+- Không trả lời quá 4 dòng
+- Không đưa hết thông tin trong 1 lần
+
+📌 FORCE RETURN TO FLOW
+Nếu khách hỏi ngoài chủ đề hoặc lan man:
+→ Trả lời ngắn 1–2 dòng, NGAY SAU ĐÓ kéo về flow:
+"... (trả lời ngắn). Để em tư vấn đúng hơn, chị đang gặp tình trạng nào ạ?"
+
+📌 XỬ LÝ TÌNH HUỐNG
+- Khách hỏi giá ngay: KHÔNG trả giá trực tiếp. Nói: "Dạ giá tùy tình trạng cụ thể ạ. Em hỏi kỹ hơn để tư vấn đúng, tránh mình làm chưa hiệu quả nhé. Chị đang gặp tình trạng gì ạ?"
+- Khách trả lời ngắn/cụt: hỏi lại để khai thác. VD: "Chị bị lâu chưa ạ?" / "Hiện tại mình bị nhiều nhất ở vùng nào?"
+- Khách im lặng: nhắc nhẹ 1 lần: "Em hỗ trợ mình thêm chút để tư vấn chuẩn hơn cho chị nha 🌿"
+- Khách từ chối: giữ quan hệ: "Dạ khi nào chị cần thư giãn hoặc cải thiện thì nhắn em nhé 🌿"
+
+📌 TƯ VẤN CHUẨN ĐÔNG Y
+- Luôn gắn với: khí huyết – kinh lạc – căng cơ
+- Không dùng từ quá y khoa, không nói quá đà
+
+📌 CHỐT LỊCH (CÓ URGENCY)
+Khi khách có dấu hiệu quan tâm:
+"Lịch bên em thường kín sớm trong ngày, hiện còn trống chiều nay và sáng mai. Chị tiện khung giờ nào em giữ lịch trước cho mình ạ?"
+→ Luôn đưa ra lựa chọn cụ thể. Sau khi khách chọn giờ → đề nghị nhắn Zalo để xác nhận: zalo.me/0987500300
+
+📌 OUTPUT
+- 2–4 dòng, 1 câu hỏi kết thúc, tự nhiên như nhân viên thật
+- Bạn phải hành động như người bán hàng tinh tế, không phải chatbot.`;
+
+  let isOpen=false, isTyping=false, greeted=false;
+  let history=[];
+
+  window.chatToggle=function(){
+    isOpen=!isOpen;
+    document.getElementById('spa-chat-fab').classList.toggle('open',isOpen);
+    if(isOpen&&!greeted){
+      greeted=true;
+      setTimeout(()=>chatAddBot('Dạ chào chị! 🌿 Em là chuyên viên tư vấn của Mộc Tâm Thang.\nĐể em hỗ trợ mình nhanh hơn, chị đang gặp tình trạng nào ạ:\n• Đau cổ vai gáy\n• Mất ngủ / stress\n• Muốn thư giãn / gội đầu dưỡng sinh'),400);
+    }
+    if(isOpen) setTimeout(()=>document.getElementById('chat-input').focus(),350);
+  };
+
+  function chatAddBot(text){
+    const msgs=document.getElementById('chat-msgs');
+    const d=document.createElement('div');
+    d.className='cmsg bot';
+    d.innerHTML=`<div class="cmsg-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+    msgs.appendChild(d);
+    msgs.scrollTop=msgs.scrollHeight;
+  }
+
+  function chatAddUser(text){
+    const msgs=document.getElementById('chat-msgs');
+    const d=document.createElement('div');
+    d.className='cmsg user';
+    d.innerHTML=`<div class="cmsg-bubble">${text}</div>`;
+    msgs.appendChild(d);
+    msgs.scrollTop=msgs.scrollHeight;
+    document.getElementById('quick-replies').style.display='none';
+  }
+
+  function showTyping(){
+    const msgs=document.getElementById('chat-msgs');
+    const d=document.createElement('div');
+    d.className='cmsg bot'; d.id='chat-typing';
+    d.innerHTML='<div class="typing-dots"><span></span><span></span><span></span></div>';
+    msgs.appendChild(d);
+    msgs.scrollTop=msgs.scrollHeight;
+  }
+
+  function removeTyping(){
+    const el=document.getElementById('chat-typing');
+    if(el) el.remove();
+  }
+
+  function addZaloBtn(){
+    if(document.getElementById('zalo-cta')) return;
+    const msgs=document.getElementById('chat-msgs');
+    const d=document.createElement('div');
+    d.className='cmsg bot'; d.id='zalo-cta';
+    d.innerHTML=`<a href="${ZALO}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#0068ff,#0050cc);color:#fff;text-decoration:none;padding:10px 16px;border-radius:22px;font-size:13px;font-weight:700;font-family:'Be Vietnam Pro',sans-serif;box-shadow:0 3px 12px rgba(0,100,255,.35);animation:msg-in .3s ease both;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.03 2 11c0 2.7 1.23 5.12 3.18 6.78L4 21l3.44-1.12A10.1 10.1 0 0012 20c5.52 0 10-4.03 10-9S17.52 2 12 2z"/></svg>
+      Nhắn Zalo ngay →
+    </a>`;
+    msgs.appendChild(d);
+    msgs.scrollTop=msgs.scrollHeight;
+  }
+
+  window.chatSendMsg=async function(text){
+    const input=document.getElementById('chat-input');
+    const txt=(text||input.value).trim();
+    if(!txt||isTyping) return;
+    input.value=''; input.style.height='auto';
+    chatAddUser(txt);
+    history.push({role:'user',content:txt});
+    isTyping=true;
+    document.getElementById('send-btn').disabled=true;
+    showTyping();
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:SYS,messages:history})
+      });
+      const data=await res.json();
+      removeTyping();
+      const reply=data.content?.[0]?.text||'Xin lỗi, em chưa hiểu. Anh/chị có thể nói lại không ạ?';
+      history.push({role:'assistant',content:reply});
+      chatAddBot(reply);
+      if(reply.toLowerCase().includes('zalo')) addZaloBtn();
+    }catch(e){
+      removeTyping();
+      chatAddBot('Xin lỗi, kết nối bị gián đoạn. Anh/chị thử lại nhé! 🙏');
+    }
+    isTyping=false;
+    document.getElementById('send-btn').disabled=false;
+  };
+
+  window.chatSendQuick=function(btn){
+    const text=btn.textContent.replace(/^\S+\s/,'').trim();
+    chatSendMsg(text);
+  };
+
+  window.chatHandleKey=function(e){
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();chatSendMsg();}
+  };
+
+  window.chatAutoResize=function(el){
+    el.style.height='auto';
+    el.style.height=Math.min(el.scrollHeight,80)+'px';
+  };
+})();
+</script>
+<!-- ══ END CHAT WIDGET ══ -->
+
 </body>
 </html>
