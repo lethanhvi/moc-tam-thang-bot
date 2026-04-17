@@ -655,6 +655,202 @@ nav.sc .nav-logo-img {
   height: 46px;
 }
 
+/* ═══════════════════════════════════════
+   BẢNG GIÁ — PRICING SECTION
+═══════════════════════════════════════ */
+#s-pricing{
+  background: var(--dark);
+  position:relative;
+  overflow:hidden;
+  padding: 100px 0 80px;
+}
+#s-pricing::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 20%, rgba(184,133,46,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 85% 80%, rgba(58,80,40,.12) 0%, transparent 60%);
+  pointer-events:none;
+}
+/* Decorative top border */
+#s-pricing::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,133,46,.5) 30%,rgba(212,168,78,.8) 50%,rgba(184,133,46,.5) 70%,transparent);
+}
+
+.pricing-header{
+  text-align:center;margin-bottom:60px;
+}
+.pricing-eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold2);margin-bottom:16px;
+}
+.pricing-eyebrow::before,.pricing-eyebrow::after{
+  content:'';width:30px;height:1px;background:var(--gold2);opacity:.5;
+}
+.pricing-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4vw,46px);
+  font-weight:400;color:var(--beige);
+  line-height:1.18;letter-spacing:.3px;
+}
+.pricing-title em{font-style:italic;color:var(--gold2);}
+.pricing-note{
+  font-size:12px;color:rgba(245,236,216,.35);
+  margin-top:12px;letter-spacing:.5px;
+  font-family:'Be Vietnam Pro',sans-serif;
+}
+
+/* TABS */
+.pricing-tabs{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:8px;
+  margin-bottom:48px;padding:0 20px;
+}
+.ptab{
+  background:rgba(245,236,216,.04);
+  border:1px solid rgba(245,236,216,.1);
+  color:rgba(245,236,216,.45);
+  padding:9px 20px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;transition:all .3s;border-radius:2px;
+  white-space:nowrap;
+}
+.ptab:hover{border-color:rgba(184,133,46,.5);color:rgba(245,236,216,.75);}
+.ptab.active{
+  background:linear-gradient(135deg,rgba(184,133,46,.2),rgba(212,168,78,.1));
+  border-color:var(--gold);color:var(--gold2);
+  box-shadow:0 0 20px rgba(184,133,46,.15);
+}
+
+/* PANELS */
+.pricing-panels{padding:0 52px;}
+.pricing-panel{display:none;}
+.pricing-panel.active{display:block;}
+
+/* CATEGORY BLOCK */
+.pc-block{
+  margin-bottom:40px;
+  background:rgba(245,236,216,.025);
+  border:1px solid rgba(245,236,216,.07);
+  border-radius:6px;overflow:hidden;
+  transition:border-color .3s;
+}
+.pc-block:hover{border-color:rgba(184,133,46,.2);}
+
+.pc-head{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 28px;
+  background:linear-gradient(90deg,rgba(184,133,46,.1),transparent);
+  border-bottom:1px solid rgba(245,236,216,.06);
+}
+.pc-icon{font-size:20px;}
+.pc-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(13px,2vw,16px);
+  font-weight:500;color:var(--gold2);
+  letter-spacing:.5px;
+}
+.pc-name-en{
+  font-size:10px;letter-spacing:2px;
+  color:rgba(245,236,216,.25);
+  text-transform:uppercase;
+  font-family:'Be Vietnam Pro',sans-serif;
+  margin-top:1px;
+}
+
+/* SERVICE ROWS */
+.pc-items{padding:8px 0;}
+.pc-item{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:baseline;
+  gap:12px;
+  padding:11px 28px;
+  border-bottom:1px solid rgba(245,236,216,.04);
+  transition:background .2s;
+}
+.pc-item:last-child{border-bottom:none;}
+.pc-item:hover{background:rgba(184,133,46,.05);}
+
+.pci-name{
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:13.5px;color:rgba(245,236,216,.75);
+  font-weight:300;line-height:1.5;
+}
+.pci-name strong{
+  color:rgba(245,236,216,.92);
+  font-weight:500;display:block;
+  font-size:13.5px;
+}
+.pci-sub{
+  font-size:11px;color:rgba(245,236,216,.3);
+  font-style:italic;margin-top:1px;
+  font-family:'Noto Serif',serif;
+}
+.pci-price{
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:13.5px;font-weight:500;
+  color:var(--gold2);
+  white-space:nowrap;text-align:right;
+}
+.pci-price.range{font-size:12px;}
+
+/* POPULAR badge */
+.pci-popular{
+  display:inline-block;
+  background:rgba(184,133,46,.18);
+  border:1px solid rgba(184,133,46,.35);
+  color:var(--gold);
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:2px 8px;border-radius:2px;
+  margin-left:8px;vertical-align:middle;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:500;
+}
+
+/* TWO COLUMN GRID for wide screen */
+.pc-two-col{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;
+}
+
+/* DIVIDER */
+.pricing-divider{
+  display:flex;align-items:center;gap:16px;
+  margin:44px 0 44px;opacity:.25;
+}
+.pricing-divider::before,.pricing-divider::after{
+  content:'';flex:1;height:1px;background:var(--gold);
+}
+.pricing-divider span{
+  font-size:10px;letter-spacing:3px;color:var(--gold);
+  font-family:'Be Vietnam Pro',sans-serif;text-transform:uppercase;
+}
+
+/* FOOTER NOTE */
+.pricing-footer-note{
+  text-align:center;margin-top:48px;padding:28px;
+  border:1px solid rgba(184,133,46,.15);
+  border-radius:4px;
+  background:rgba(184,133,46,.04);
+}
+.pricing-footer-note p{
+  font-family:'Noto Serif',serif;
+  font-style:italic;font-size:13px;
+  color:rgba(245,236,216,.45);line-height:1.9;
+}
+.pricing-footer-note strong{
+  color:var(--gold2);font-style:normal;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:12px;
+  letter-spacing:.5px;
+}
+
+@media(max-width:900px){
+  .pricing-panels{padding:0 24px;}
+  .pc-two-col{grid-template-columns:1fr;}
+  .pc-head{padding:14px 18px;}
+  .pc-item{padding:10px 18px;}
+}
+
 </style>
 </head>
 <body>
@@ -672,6 +868,7 @@ nav.sc .nav-logo-img {
     <li><a href="#s-pain">Giảm Đau</a></li>
     <li><a href="#s-relax">Thư Giãn</a></li>
     <li><a href="#s-process">Quy Trình</a></li>
+    <li><a href="#s-pricing">Bảng Giá</a></li>
     <li><a href="#s-reviews">Feedback</a></li>
     <li><a href="#s-about">Về Spa</a></li>
   </ul>
@@ -684,6 +881,7 @@ nav.sc .nav-logo-img {
   <a href="#s-pain"    onclick="closeMenu()">💆 Giảm Đau – Phục Hồi</a>
   <a href="#s-relax"   onclick="closeMenu()">🌿 Thư Giãn – Ngủ Sâu</a>
   <a href="#s-process" onclick="closeMenu()">🧭 Quy Trình Trị Liệu</a>
+  <a href="#s-pricing" onclick="closeMenu()">💰 Bảng Giá Dịch Vụ</a>
   <a href="#s-reviews" onclick="closeMenu()">💬 Khách Hàng Nói Gì</a>
   <a href="#s-about"   onclick="closeMenu()">🏡 Về Mộc Tâm Thang</a>
   <button class="mob-cta" onclick="closeMenu();document.getElementById('s-cta').scrollIntoView({behavior:'smooth'})">
@@ -898,6 +1096,319 @@ nav.sc .nav-logo-img {
   </div>
 </section>
 
+<!-- ══ S5b: BẢNG GIÁ ══ -->
+<section id="s-pricing">
+  <div class="pricing-header rv">
+    <div class="pricing-eyebrow">Bảng Giá Dịch Vụ</div>
+    <h2 class="pricing-title">Minh bạch · Trọn vẹn<br><em>Không phát sinh</em></h2>
+    <p class="pricing-note">Giá đã bao gồm toàn bộ liệu trình · Hotline 0987.500.300</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="pricing-tabs rv d1">
+    <button class="ptab active" onclick="switchTab('body')">💆 Toàn Thân & Chăm Sóc</button>
+    <button class="ptab" onclick="switchTab('massage')">🌿 Massage Trị Liệu</button>
+    <button class="ptab" onclick="switchTab('face')">✨ Chăm Sóc Da Mặt</button>
+    <button class="ptab" onclick="switchTab('hair')">🌸 Gội Đầu & Tóc</button>
+  </div>
+
+  <div class="pricing-panels rv d2">
+
+    <!-- ── PANEL 1: BODY + FOOT ── -->
+    <div class="pricing-panel active" id="panel-body">
+      <div class="pc-two-col">
+
+        <div class="pc-block">
+          <div class="pc-head">
+            <span class="pc-icon">🧴</span>
+            <div>
+              <div class="pc-name">Chăm Sóc Da Toàn Thân</div>
+              <div class="pc-name-en">Body Skincare</div>
+            </div>
+          </div>
+          <div class="pc-items">
+            <div class="pc-item">
+              <div class="pci-name"><strong>Chăm sóc dưỡng da toàn thân</strong></div>
+              <div class="pci-price">350.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Tắm, hấp, ủ tráng đông y</strong></div>
+              <div class="pci-price">280.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name">
+                <strong>Tẩy da chết body thảo mộc, cà phê</strong>
+              </div>
+              <div class="pci-price">239.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Chăm sóc da viêm nang lông body</strong></div>
+              <div class="pci-price">269.000đ</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc-block">
+          <div class="pc-head">
+            <span class="pc-icon">🦶</span>
+            <div>
+              <div class="pc-name">Chăm Sóc Chân</div>
+              <div class="pc-name-en">Foot Care</div>
+            </div>
+          </div>
+          <div class="pc-items">
+            <div class="pc-item">
+              <div class="pci-name"><strong>Chà gót chân</strong></div>
+              <div class="pci-price">69.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Ngâm chân thuốc bắc</strong></div>
+              <div class="pci-price">49.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name">
+                <strong>Massage chân</strong>
+                <span class="pci-popular">Phổ biến</span>
+              </div>
+              <div class="pci-price">129.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Massage chân cao cấp</strong></div>
+              <div class="pci-price">199.000đ</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── PANEL 2: MASSAGE ── -->
+    <div class="pricing-panel" id="panel-massage">
+      <div class="pc-block">
+        <div class="pc-head">
+          <span class="pc-icon">🌿</span>
+          <div>
+            <div class="pc-name">Body Massage — Toàn Thân</div>
+            <div class="pc-name-en">Oriental Therapeutic Massage</div>
+          </div>
+        </div>
+        <div class="pc-items">
+          <div class="pc-item">
+            <div class="pci-name">
+              <strong>Massage body dưỡng sinh đông y VIP</strong>
+              <span class="pci-sub">VIP Oriental Nourishing Body Massage</span>
+            </div>
+            <div class="pci-price">520.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name">
+              <strong>Massage đông y trị liệu chuyên sâu</strong>
+              <span class="pci-sub">Intensive Therapeutic Oriental Massage</span>
+            </div>
+            <div class="pci-price">600.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name">
+              <strong>Massage đông y trị liệu vai gáy</strong>
+              <span class="pci-sub">Shoulder & Neck Therapeutic Massage</span>
+            </div>
+            <div class="pci-price">200.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name">
+              <strong>Massage body đông y thông kinh hoạt lạc</strong>
+              <span class="pci-sub">Full-body Oriental Medicine Massage</span>
+            </div>
+            <div class="pci-price">369.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name">
+              <strong>Massage body tinh dầu thảo mộc</strong>
+              <span class="pci-sub">Body Massage with Mộc Tâm Thang Essential Oil</span>
+            </div>
+            <div class="pci-price">269.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name">
+              <strong>Massage vai gáy bằng tinh dầu chất gừng</strong>
+              <span class="pci-sub">Shoulder & Neck with Ginger Essential Oil</span>
+            </div>
+            <div class="pci-price range">149.000đ – 199.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name">
+              <strong>Massage vai gáy bằng đầu thảo mộc</strong>
+              <span class="pci-sub">Shoulder & Neck with Herbal Oil</span>
+            </div>
+            <div class="pci-price range">149.000đ – 199.000đ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 3: DA MẶT ── -->
+    <div class="pricing-panel" id="panel-face">
+      <div class="pc-block">
+        <div class="pc-head">
+          <span class="pc-icon">✨</span>
+          <div>
+            <div class="pc-name">Chăm Sóc Da Mặt</div>
+            <div class="pc-name-en">Face Skincare</div>
+          </div>
+        </div>
+        <div class="pc-items">
+          <div class="pc-item">
+            <div class="pci-name"><strong>Tẩy da chết, rửa mặt và massage mặt</strong></div>
+            <div class="pci-price range">20.000đ + 30.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Đắp mặt nạ thuốc bắc</strong></div>
+            <div class="pci-price">49.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Đắp mặt nạ dưỡng ẩm</strong></div>
+            <div class="pci-price range">79.000đ – 119.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Đắp mặt nạ tái sinh collagen</strong></div>
+            <div class="pci-price">129.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Massage mặt thảo mộc</strong></div>
+            <div class="pci-price range">69.000đ – 99.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Massage mặt serum collagen</strong></div>
+            <div class="pci-price">129.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Massage DHA cá hồi</strong></div>
+            <div class="pci-price range">129.000đ – 169.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Lấy nhân mụn</strong></div>
+            <div class="pci-price range">99.000đ – 199.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name">
+              <strong>Điều trị thâm nám liệu trình</strong>
+              <span class="pci-popular">Đặc trị</span>
+            </div>
+            <div class="pci-price">1.500.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Cấy tảo chống lão hóa</strong></div>
+            <div class="pci-price">250.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Cấy tế bào gốc</strong></div>
+            <div class="pci-price">300.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Cấy vitamin</strong></div>
+            <div class="pci-price">250.000đ</div>
+          </div>
+          <div class="pc-item">
+            <div class="pci-name"><strong>Cấy tảo xoắn</strong></div>
+            <div class="pci-price">249.000đ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 4: GỘI ĐẦU + TÓC ── -->
+    <div class="pricing-panel" id="panel-hair">
+      <div class="pc-two-col">
+
+        <div class="pc-block">
+          <div class="pc-head">
+            <span class="pc-icon">🌸</span>
+            <div>
+              <div class="pc-name">Gội Đầu Thảo Mộc + Collagen</div>
+              <div class="pc-name-en">Herbal Shampooing with Collagen</div>
+            </div>
+          </div>
+          <div class="pc-items">
+            <div class="pc-item">
+              <div class="pci-name"><strong>Gội đầu thảo mộc</strong></div>
+              <div class="pci-price">69.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Gội collagen</strong></div>
+              <div class="pci-price">79.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Gội collagen phục hồi hư tổn</strong></div>
+              <div class="pci-price range">149.000đ – 199.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name">
+                <strong>Gội trị gàu giảm rụng</strong>
+                <span class="pci-popular">Phổ biến</span>
+              </div>
+              <div class="pci-price">99.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Gội tái sinh mọc tóc</strong></div>
+              <div class="pci-price range">149.000đ – 199.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Hấp thảo mộc</strong></div>
+              <div class="pci-price range">149.000đ – 199.000đ</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pc-block">
+          <div class="pc-head">
+            <span class="pc-icon">💆</span>
+            <div>
+              <div class="pc-name">Gội Đầu Mộc Tâm Thang</div>
+              <div class="pc-name-en">Signature Shampooing</div>
+            </div>
+          </div>
+          <div class="pc-items">
+            <div class="pc-item">
+              <div class="pci-name"><strong>Gội đầu thảo dược Mộc Tâm Thang</strong></div>
+              <div class="pci-price">99.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Gội đầu dưỡng sinh truyền thống</strong></div>
+              <div class="pci-price">149.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Gội đầu dưỡng sinh chuyên sâu</strong></div>
+              <div class="pci-price">199.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name">
+                <strong>Gội đầu não an thần — Brain Sedator</strong>
+                <span class="pci-popular">Đặc trị</span>
+              </div>
+              <div class="pci-price">249.000đ</div>
+            </div>
+            <div class="pc-item">
+              <div class="pci-name"><strong>Gội đầu giảm áp kiên tóc</strong></div>
+              <div class="pci-price">249.000đ</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- end pricing-panels -->
+
+  <div class="pricing-footer-note rv d3" style="max-width:760px;margin:48px auto 0;">
+    <p>
+      Tất cả dịch vụ sử dụng <strong>100% thảo dược thiên nhiên</strong> — không hóa chất, không chất bảo quản.<br>
+      Giá trên là giá niêm yết, có thể thay đổi theo chương trình khuyến mãi.<br>
+      Liên hệ <strong>0987.500.300</strong> để được tư vấn liệu trình phù hợp nhất.
+    </p>
+  </div>
+
+</section>
+
 <!-- ══ S6: CTA CUỐI ══ -->
 <section id="s-cta">
   <div class="cta-wrap">
@@ -949,6 +1460,7 @@ nav.sc .nav-logo-img {
       <li><a href="#s-pain">Giảm Đau</a></li>
       <li><a href="#s-relax">Thư Giãn</a></li>
       <li><a href="#s-process">Quy Trình</a></li>
+      <li><a href="#s-pricing">Bảng Giá</a></li>
       <li><a href="#s-reviews">Feedback</a></li>
       <li><a href="#s-about">Về Spa</a></li>
     </ul>
@@ -984,10 +1496,16 @@ hmbg.addEventListener('click',function(){
   hmbg.classList.toggle('open',open);
   document.body.style.overflow=open?'hidden':'';
 });
-// Close on outside click
-mobMenu.addEventListener('click',function(e){
-  if(e.target===mobMenu) closeMenu();
-});
+// Pricing tabs
+function switchTab(id){
+  document.querySelectorAll('.ptab').forEach((t,i)=>{
+    const ids=['body','massage','face','hair'];
+    t.classList.toggle('active', ids[i]===id);
+  });
+  document.querySelectorAll('.pricing-panel').forEach(p=>{
+    p.classList.toggle('active', p.id==='panel-'+id);
+  });
+}
 </script>
 
 <!-- ══════════════════════════════════════════
@@ -1085,9 +1603,31 @@ mobMenu.addEventListener('click',function(e){
 <script>
 (function(){
   const ZALO = 'https://zalo.me/0987500300';
-  const SYS  = `Bạn là chuyên viên tư vấn của spa Đông y Mộc Tâm Thang.
-Mục tiêu DUY NHẤT của bạn: → Dẫn dắt khách hàng theo quy trình tư vấn để ĐẶT LỊCH.
+  const SYS  = `Bạn là Linh — chuyên viên tư vấn của spa Đông y Mộc Tâm Thang.
+Mục tiêu DUY NHẤT: Dẫn dắt khách hàng theo quy trình tư vấn để ĐẶT LỊCH.
 Bạn KHÔNG được chỉ trả lời câu hỏi một cách bị động.
+
+📌 THÔNG TIN SPA
+Tên: Spa Mộc Tâm Thang
+Giờ: 8:00 – 20:00, Thứ 2 đến Chủ Nhật
+Cơ sở I: 42 Thiên Phát, VSIP, P. Trương Quang Trọng, TP Quảng Ngãi
+Cơ sở II: Ngã 4 Ký túc xá Hòa Phát – Cây xăng Bình Đông, X. Bình Đông, H. Bình Sơn, Quảng Ngãi
+
+📌 DỊCH VỤ & GIÁ
+⭐ [ƯU TIÊN TƯ VẤN - DỊCH VỤ HOT]
+• Massage toàn thân thông kinh hoạt lạc – giải độc, giải cảm, thư giãn cơ thể sâu: 369.000đ
+  → Đây là dịch vụ được khách yêu thích nhất, hiệu quả rõ rệt sau 1 lần.
+
+[Dịch vụ bổ sung]
+• Massage body dưỡng sinh Đông y VIP: 520.000đ
+• Chăm sóc dưỡng da toàn thân: 350.000đ
+• Gội đầu dưỡng sinh truyền thống: 149.000đ
+• Đắp mặt nạ tái sinh Collagen: 129.000đ
+
+📌 LUẬT ƯU TIÊN DỊCH VỤ
+- Với MỌI tình trạng (đau mỏi, mất ngủ, stress, mệt mỏi, căng thẳng): ưu tiên gợi ý Massage Toàn Thân Thông Kinh Hoạt Lạc TRƯỚC.
+- Chỉ gợi ý dịch vụ khác nếu khách hỏi cụ thể hoặc rõ ràng không phù hợp.
+- Khi giới thiệu dịch vụ này: nhấn vào 3 điểm → thông kinh lạc, đẩy độc tố, thư giãn cơ sâu.
 
 🎯 NGUYÊN TẮC CỐT LÕI
 - Luôn dẫn dắt hội thoại (không chờ khách hỏi)
@@ -1099,29 +1639,32 @@ Bạn KHÔNG được chỉ trả lời câu hỏi một cách bị động.
 - Xưng: "em" — Gọi: "chị" (hoặc "anh")
 - Giọng: nhẹ nhàng – tinh tế – chuyên viên thật
 - Trả lời ngắn gọn, tự nhiên
+- Không dùng markdown (**, ##, ---)
+- Emoji tối đa 1–2 cái mỗi tin nhắn
 
 📌 ENTRY CONTROL
 Khi khách chưa rõ nhu cầu hoặc trả lời mơ hồ, đưa ra lựa chọn:
 "Em hỗ trợ mình nhanh hơn, chị đang gặp tình trạng nào ạ:
-• Đau cổ vai gáy
-• Mất ngủ / stress
+• Đau cổ vai gáy / mỏi lưng
+• Mất ngủ / stress / mệt mỏi
 • Muốn thư giãn / gội đầu dưỡng sinh"
 → Ưu tiên câu hỏi dạng lựa chọn
 
 📌 FLOW BẮT BUỘC (KHÔNG ĐƯỢC BỎ QUA)
 Bước 1: Chào + hỏi tình trạng
 Bước 2: Khai thác sâu (ít nhất 2 câu hỏi)
-Bước 3: Nhận định nhẹ (chuẩn Đông y)
-Bước 4: Gợi ý liệu trình
+Bước 3: Nhận định nhẹ theo Đông y (khí huyết – kinh lạc – căng cơ)
+Bước 4: Gợi ý Massage Thông Kinh Hoạt Lạc là lựa chọn đầu tiên
 Bước 5: Hỏi để tiến tới đặt lịch
-Bước 6: Đề xuất khung giờ cụ thể
-Bước 7: Chốt lịch
-→ Nếu chưa đạt bước 7 → tiếp tục dẫn dắt. Mỗi lần trả lời chỉ làm 1 bước.
+Bước 6: Đề xuất khung giờ + hỏi chị tiện cơ sở nào
+Bước 7: Chốt lịch → chuyển Zalo
+→ Mỗi lần trả lời chỉ làm 1 bước. Chưa đạt bước 7 → tiếp tục dẫn dắt.
 
 📌 LUẬT QUAN TRỌNG
 - Luôn kết thúc bằng 1 câu hỏi
 - Không trả lời quá 4 dòng
 - Không đưa hết thông tin trong 1 lần
+- Nhớ và dùng lại thông tin khách đã cung cấp, không hỏi lại điều đã biết
 
 📌 FORCE RETURN TO FLOW
 Nếu khách hỏi ngoài chủ đề hoặc lan man:
@@ -1129,23 +1672,21 @@ Nếu khách hỏi ngoài chủ đề hoặc lan man:
 "... (trả lời ngắn). Để em tư vấn đúng hơn, chị đang gặp tình trạng nào ạ?"
 
 📌 XỬ LÝ TÌNH HUỐNG
-- Khách hỏi giá ngay: KHÔNG trả giá trực tiếp. Nói: "Dạ giá tùy tình trạng cụ thể ạ. Em hỏi kỹ hơn để tư vấn đúng, tránh mình làm chưa hiệu quả nhé. Chị đang gặp tình trạng gì ạ?"
-- Khách trả lời ngắn/cụt: hỏi lại để khai thác. VD: "Chị bị lâu chưa ạ?" / "Hiện tại mình bị nhiều nhất ở vùng nào?"
-- Khách im lặng: nhắc nhẹ 1 lần: "Em hỗ trợ mình thêm chút để tư vấn chuẩn hơn cho chị nha 🌿"
-- Khách từ chối: giữ quan hệ: "Dạ khi nào chị cần thư giãn hoặc cải thiện thì nhắn em nhé 🌿"
-
-📌 TƯ VẤN CHUẨN ĐÔNG Y
-- Luôn gắn với: khí huyết – kinh lạc – căng cơ
-- Không dùng từ quá y khoa, không nói quá đà
+- Khách hỏi giá ngay: KHÔNG trả giá trực tiếp. Nói: "Dạ giá tùy tình trạng cụ thể ạ. Em hỏi kỹ hơn để tư vấn đúng cho mình nhé. Chị đang gặp tình trạng gì ạ?"
+- Khách trả lời ngắn/cụt: khai thác thêm. VD: "Chị bị lâu chưa ạ?" / "Mình bị nhiều nhất ở vùng nào ạ?"
+- Khách im lặng: nhắc nhẹ 1 lần: "Em hỗ trợ thêm chút để tư vấn chuẩn hơn cho chị nha 🌿"
+- Khách từ chối: giữ quan hệ: "Dạ khi nào chị cần thư giãn thì nhắn em nhé 🌿"
+- Khách hỏi y tế nghiêm trọng (thuốc, bệnh nặng): "Dạ vấn đề này chị nên gặp bác sĩ để được thăm khám kỹ hơn ạ. Bên em chuyên hỗ trợ phục hồi thể chất và thư giãn theo Đông y truyền thống."
 
 📌 CHỐT LỊCH (CÓ URGENCY)
 Khi khách có dấu hiệu quan tâm:
-"Lịch bên em thường kín sớm trong ngày, hiện còn trống chiều nay và sáng mai. Chị tiện khung giờ nào em giữ lịch trước cho mình ạ?"
-→ Luôn đưa ra lựa chọn cụ thể. Sau khi khách chọn giờ → đề nghị nhắn Zalo để xác nhận: zalo.me/0987500300
+"Lịch bên em thường kín sớm trong ngày, hiện còn trống chiều nay và sáng mai. Chị tiện khung giờ nào em giữ lịch trước ạ?"
+→ Sau khi khách chọn giờ → hỏi: "Chị tiện đến cơ sở nào ạ — cơ sở VSIP hay cơ sở Bình Sơn?"
+→ Chốt xong → nhắn Zalo xác nhận: zalo.me/0987500300
 
 📌 OUTPUT
 - 2–4 dòng, 1 câu hỏi kết thúc, tự nhiên như nhân viên thật
-- Bạn phải hành động như người bán hàng tinh tế, không phải chatbot.`;
+- Hành động như người bán hàng tinh tế, không phải chatbot.`;
 
   let isOpen=false, isTyping=false, greeted=false;
   let history=[];
