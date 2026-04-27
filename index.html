@@ -1507,10 +1507,8 @@ function switchTab(id){
 </script>
 
 <!-- ══════════════════════════════════════════
-     BOOKING MODAL v3
-     Fix 1: autocomplete attributes
-     Fix 2: Object.assign trong bkReset
-     Fix 3: Popup fallback banner
+     BOOKING MODAL v4
+     Gửi SMS trực tiếp thay vì Zalo link
 ══════════════════════════════════════════ -->
 <style>
 #bk-overlay{position:fixed;inset:0;z-index:9000;background:rgba(8,4,1,.85);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .3s ease;-webkit-overflow-scrolling:touch;}
@@ -1618,7 +1616,7 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   <div class="bk-hd">
     <div class="bk-chip">Đặt Lịch Online</div>
     <h2 class="bk-title">Giữ chỗ buổi <em>thư giãn</em></h2>
-    <p class="bk-sub">Xác nhận qua Zalo trong 30 phút · Mở cửa 8:00–20:00</p>
+    <p class="bk-sub">Nhân viên gọi lại xác nhận trong 30 phút · Mở cửa 8:00–20:00</p>
     <button class="bk-x" onclick="bkClose()" aria-label="Đóng">✕</button>
   </div>
   <div class="bk-steps" id="bk-steps">
@@ -1718,14 +1716,14 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
 
       <!-- FIX 3: Fallback banner khi popup bị block -->
       <div id="bk-fallback">
-        <p>Trình duyệt đã <strong>chặn cửa sổ Zalo</strong>. Nhấn nút bên dưới để mở thủ công — tin nhắn đã được điền sẵn:</p>
-        <a id="bk-fallback-lnk" href="#" target="_blank" class="bk-fallback-lnk">💬 &nbsp; Mở Zalo Thủ Công</a>
+        <p>Không mở được ứng dụng Tin nhắn tự động. Nhấn nút bên dưới để thử lại — nội dung đã được điền sẵn:</p>
+        <a id="bk-fallback-lnk" href="#" target="_blank" class="bk-fallback-lnk">✉️ &nbsp; Mở Tin Nhắn Thủ Công</a>
       </div>
 
-      <div class="bk-note"><p>Sau khi nhấn <strong>"Gửi Đặt Lịch"</strong>, Zalo sẽ mở với tin nhắn soạn sẵn — chỉ cần nhấn <strong>Gửi</strong> là xong.</p></div>
+      <div class="bk-note"><p>Sau khi nhấn <strong>"Gửi Đặt Lịch"</strong>, ứng dụng Tin nhắn sẽ mở với nội dung soạn sẵn — chỉ cần nhấn <strong>Gửi</strong> là xong.</p></div>
       <div class="bk-btns">
         <button class="bk-back" onclick="bkGo(2)">← Quay Lại</button>
-        <button class="bk-submit" id="bk-submit-btn" onclick="bkSubmit()">💬 &nbsp; Gửi Đặt Lịch</button>
+        <button class="bk-submit" id="bk-submit-btn" onclick="bkSubmit()">✉️ &nbsp; Gửi Đặt Lịch</button>
       </div>
     </div>
 
@@ -1735,7 +1733,7 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
       <h3>Đặt lịch <em>thành công!</em></h3>
       <div class="bk-ok-summary" id="bk-ok-summary"></div>
       <p class="bk-ok-note">Nhân viên xác nhận qua Zalo hoặc gọi lại trong 30 phút. Hẹn gặp bạn tại spa 🍃</p>
-      <a href="https://zalo.me/0987500300" class="bk-zalo-a" target="_blank">💬 &nbsp; Nhắn Thêm Zalo</a>
+      <a href="tel:0987500300" class="bk-zalo-a">📞 &nbsp; Gọi Lại 0987.500.300</a>
       <button class="bk-new" onclick="bkReset()">↺ Đặt lịch mới</button>
     </div>
 
@@ -1838,39 +1836,50 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   function buildMsg(){
     var code='MTT-'+Math.random().toString(36).slice(2,6).toUpperCase();
     var fmt=new Date(S.date+'T00:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-    return ['🌿 ĐẶT LỊCH – MỘC TÂM THANG',
-      '─────────────────────────',
-      '🔖 Mã: #'+code,
-      '👤 Họ tên: '+S.name,
-      '📞 SĐT: '+S.phone,
-      '🎋 Dịch vụ: '+S.svcs.join(', '),
-      '🏡 Cơ sở: '+S.branch,
-      '📅 Ngày: '+fmt,
-      '🕐 Giờ: '+S.time,
-      '👥 Số người: '+S.guests,
-      S.note?'📝 Ghi chú: '+S.note:'',
-      '─────────────────────────',
-      'Nhờ xác nhận lịch hẹn. Cảm ơn!'
+    return [
+      'DAT LICH MOC TAM THANG',
+      'Ma: #'+code,
+      'Ho ten: '+S.name,
+      'SDT: '+S.phone,
+      'Dich vu: '+S.svcs.join(', '),
+      'Co so: '+S.branch,
+      'Ngay: '+fmt,
+      'Gio: '+S.time,
+      'So nguoi: '+S.guests,
+      S.note?'Ghi chu: '+S.note:'',
+      'Nho xac nhan. Cam on!'
     ].filter(Boolean).join('\n');
   }
 
-  /* FIX 3: submit với popup fallback detection */
+  function buildSmsUrl(msg){
+    /* iOS dùng & , Android dùng ? — detect bằng userAgent */
+    var isIos=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+    var sep=isIos?'&':'?';
+    return 'sms:'+ZALO+sep+'body='+encodeURIComponent(msg);
+  }
+
   window.bkSubmit=function(){
     if(!val(3))return;
     var msg=buildMsg();
-    zaloURL='https://zalo.me/'+ZALO+'?text='+encodeURIComponent(msg);
-    document.getElementById('bk-fallback-lnk').href=zaloURL;
-    var win=window.open(zaloURL,'_blank');
-    setTimeout(function(){
-      var blocked=!win||win.closed||typeof win.closed==='undefined';
-      if(blocked){
+    var smsUrl=buildSmsUrl(msg);
+    zaloURL=smsUrl; /* reuse var cho fallback */
+    document.getElementById('bk-fallback-lnk').href=smsUrl;
+
+    /* Mở SMS app — location.href đáng tin hơn window.open cho sms: scheme */
+    try{
+      window.location.href=smsUrl;
+      /* Sau 1.5s nếu vẫn ở trang này → có thể bị block, hiện fallback */
+      setTimeout(function(){
         document.getElementById('bk-fallback').style.display='block';
         document.getElementById('bk-submit-btn').style.display='none';
         document.querySelector('.bk-body').scrollTop=0;
-      } else {
-        showSuccess(msg);
-      }
-    },500);
+      },1500);
+      /* Đồng thời show success sau 800ms */
+      setTimeout(function(){showSuccess(msg);},800);
+    }catch(e){
+      document.getElementById('bk-fallback').style.display='block';
+      document.getElementById('bk-submit-btn').style.display='none';
+    }
   };
 
   function showSuccess(msg){
