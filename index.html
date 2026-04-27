@@ -1507,257 +1507,768 @@ function switchTab(id){
 </script>
 
 <!-- ══════════════════════════════════════════
-     BOOKING MODAL v4
-     Gửi SMS trực tiếp thay vì Zalo link
+     BOOKING MODAL v5 — Premium UI Redesign
 ══════════════════════════════════════════ -->
 <style>
-#bk-overlay{position:fixed;inset:0;z-index:9000;background:rgba(5,2,0,.78);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .3s ease;-webkit-overflow-scrolling:touch;}
+/* ── OVERLAY ── */
+#bk-overlay{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(10,5,2,.75);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .32s ease;
+}
 #bk-overlay.open{opacity:1;pointer-events:all;}
 body.bk-locked{position:fixed;width:100%;overflow:hidden;}
-.bk-modal{width:100%;max-width:580px;background:linear-gradient(160deg,#fdf6e8 0%,#f5e9ce 100%);border:1px solid rgba(139,90,20,.25);border-radius:4px;position:relative;transform:translateY(24px) scale(.97);transition:transform .38s cubic-bezier(.34,1.2,.64,1);max-height:calc(100vh - 32px);max-height:calc(var(--vh,1vh)*100 - 32px);display:flex;flex-direction:column;overflow:hidden;}
-#bk-overlay.open .bk-modal{transform:translateY(0) scale(1);}
-.bk-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--gold) 30%,var(--gold2) 50%,var(--gold) 70%,transparent 100%);opacity:1;z-index:1;}
-.bk-hd{padding:22px 28px 0;flex-shrink:0;position:relative;}
-.bk-chip{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(120,72,10,.65);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
-.bk-chip::before{content:'';width:16px;height:1px;background:var(--gold2);opacity:.7;}
-.bk-title{font-family:'Playfair Display',serif;font-size:clamp(18px,3.5vw,24px);font-weight:400;color:var(--wood);line-height:1.2;margin-bottom:3px;}
-.bk-title em{font-style:italic;color:var(--gold2);}
-.bk-sub{font-size:11.5px;color:rgba(80,45,15,.55);font-family:'Noto Serif',serif;font-style:italic;margin-bottom:16px;}
-.bk-x{position:absolute;top:18px;right:20px;width:30px;height:30px;border-radius:50%;background:rgba(139,90,20,.08);border:1px solid rgba(139,90,20,.2);color:rgba(100,60,10,.5);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .2s;line-height:1;}
-.bk-x:hover{background:rgba(184,133,46,.15);border-color:var(--gold);color:var(--gold);}
-.bk-steps{display:flex;align-items:flex-start;padding:0 28px 14px;flex-shrink:0;}
-.bk-step-item{display:flex;flex-direction:column;align-items:center;gap:5px;position:relative;flex:1;}
-.bk-step-item:not(:last-child)::after{content:'';position:absolute;top:13px;left:calc(50% + 16px);right:calc(-50% + 16px);height:1px;background:rgba(184,133,46,.22);transition:background .3s;}
-.bk-step-item.done:not(:last-child)::after{background:var(--gold);}
-.bk-step-num{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(139,90,20,.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-family:'Playfair Display',serif;color:rgba(139,90,20,.4);transition:all .3s;background:rgba(245,236,216,.6);flex-shrink:0;}
-.bk-step-lbl{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(100,65,20,.4);text-align:center;transition:color .3s;white-space:nowrap;}
-.bk-step-item.active .bk-step-num{border-color:var(--gold2);color:var(--gold2);box-shadow:0 0 0 4px rgba(184,133,46,.1),0 0 10px rgba(184,133,46,.15);}
-.bk-step-item.active .bk-step-lbl{color:var(--wood2);}
-.bk-step-item.done .bk-step-num{background:var(--gold);border-color:var(--gold);color:var(--dark);font-size:12px;}
-.bk-step-item.done .bk-step-lbl{color:rgba(100,65,20,.45);}
-.bk-body{overflow-y:auto;flex:1;padding:4px 28px 24px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(184,133,46,.35) transparent;}
-.bk-body::-webkit-scrollbar{width:3px;}
-.bk-body::-webkit-scrollbar-thumb{background:rgba(184,133,46,.35);border-radius:2px;}
+
+/* ── MODAL — sheet từ dưới lên trên mobile ── */
+.bk-modal{
+  width:100%;max-width:520px;
+  background:#fdf8f0;
+  border-radius:24px 24px 0 0;
+  position:relative;
+  transform:translateY(100%);
+  transition:transform .42s cubic-bezier(.32,1.1,.64,1);
+  max-height:92vh;
+  max-height:calc(var(--vh,1vh)*92);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 -8px 48px rgba(43,26,14,.18);
+}
+#bk-overlay.open .bk-modal{transform:translateY(0);}
+
+/* drag handle */
+.bk-handle{
+  width:40px;height:4px;border-radius:2px;
+  background:rgba(43,26,14,.15);
+  margin:12px auto 0;flex-shrink:0;
+}
+
+/* ── HEADER ── */
+.bk-hd{
+  padding:16px 24px 0;
+  flex-shrink:0;
+  text-align:center;
+  position:relative;
+  background:#fdf8f0;
+}
+.bk-lotus{font-size:28px;display:block;margin-bottom:6px;line-height:1;}
+.bk-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,5vw,28px);
+  font-weight:400;color:#2B1A0E;
+  line-height:1.2;margin-bottom:5px;
+}
+.bk-title em{font-style:italic;color:#B8852E;}
+.bk-sub{
+  font-size:12.5px;color:rgba(43,26,14,.5);
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:300;
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  margin-bottom:10px;
+}
+.bk-sub span{display:flex;align-items:center;gap:4px;}
+
+/* urgency badge */
+.bk-urgency{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#fff3e0;
+  border:1px solid rgba(184,133,46,.3);
+  border-radius:20px;
+  padding:5px 14px;
+  font-size:12px;font-weight:500;
+  color:#8B4513;
+  margin-bottom:14px;
+  font-family:'Be Vietnam Pro',sans-serif;
+}
+
+/* close btn */
+.bk-x{
+  position:absolute;top:16px;right:20px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(43,26,14,.07);border:none;
+  color:rgba(43,26,14,.5);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:all .2s;
+  font-weight:300;
+}
+.bk-x:hover{background:rgba(43,26,14,.12);color:#2B1A0E;}
+
+/* ── STEP BAR ── */
+.bk-stepbar{
+  display:flex;align-items:center;
+  padding:0 24px 14px;
+  flex-shrink:0;
+  background:#fdf8f0;
+  gap:0;
+}
+.bk-si{
+  display:flex;flex-direction:column;align-items:center;
+  gap:4px;flex:1;position:relative;
+}
+.bk-si:not(:last-child)::after{
+  content:'';
+  position:absolute;top:14px;
+  left:calc(50% + 18px);right:calc(-50% + 18px);
+  height:2px;
+  background:rgba(184,133,46,.2);
+  transition:background .4s;
+}
+.bk-si.done:not(:last-child)::after{background:#B8852E;}
+.bk-snum{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid rgba(184,133,46,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-family:'Be Vietnam Pro',sans-serif;font-weight:500;
+  color:rgba(184,133,46,.4);
+  background:#fff;
+  transition:all .3s;
+  position:relative;z-index:1;
+}
+.bk-slbl{
+  font-size:9.5px;letter-spacing:.5px;
+  color:rgba(43,26,14,.35);
+  font-family:'Be Vietnam Pro',sans-serif;
+  white-space:nowrap;transition:color .3s;
+}
+.bk-si.active .bk-snum{
+  border-color:#B8852E;color:#fff;background:#B8852E;
+  box-shadow:0 0 0 4px rgba(184,133,46,.15);
+}
+.bk-si.active .bk-slbl{color:#B8852E;font-weight:500;}
+.bk-si.done .bk-snum{
+  border-color:#3A5028;background:#3A5028;color:#fff;font-size:13px;
+}
+.bk-si.done .bk-slbl{color:#3A5028;}
+
+/* ── SCROLLABLE BODY ── */
+.bk-body{
+  overflow-y:auto;flex:1;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.bk-body::-webkit-scrollbar{display:none;}
+
+/* ── PANELS ── */
 .bkp{display:none;}
-.bkp.on{display:block;animation:bkSlide .3s ease both;}
-@keyframes bkSlide{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
-.bk-svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
-.bk-sc{background:rgba(255,248,235,.7);border:1px solid rgba(184,133,46,.22);border-radius:3px;padding:12px 14px 12px 12px;cursor:pointer;transition:all .2s;position:relative;display:flex;align-items:flex-start;gap:10px;min-height:52px;}
-.bk-sc:hover{border-color:rgba(139,90,20,.45);}
-.bk-sc.on{border-color:var(--gold);background:rgba(184,133,46,.14);}
-.bk-sc-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
-.bk-sc-body{flex:1;min-width:0;}
-.bk-sc-name{font-family:'Playfair Display',serif;font-size:12.5px;color:var(--wood);margin-bottom:1px;transition:color .2s;line-height:1.3;}
-.bk-sc.on .bk-sc-name{color:var(--gold2);}
-.bk-sc-sub{font-size:10px;color:rgba(80,50,15,.5);line-height:1.4;}
-.bk-tick{position:absolute;top:7px;right:8px;width:14px;height:14px;border-radius:50%;border:1px solid rgba(184,133,46,.3);display:flex;align-items:center;justify-content:center;font-size:7px;color:transparent;transition:all .2s;}
-.bk-sc.on .bk-tick{background:var(--gold2);border-color:var(--gold2);color:var(--dark);}
+.bkp.on{display:block;animation:bkIn .28s ease both;}
+@keyframes bkIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:none;}}
+
+/* ── SECTION TITLE ── */
+.bk-sec-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:400;
+  color:#2B1A0E;
+  text-align:center;
+  padding:16px 24px 4px;
+  position:relative;
+}
+.bk-sec-title::after{
+  content:'❧';
+  display:block;font-size:14px;
+  color:rgba(184,133,46,.5);margin-top:3px;
+}
+
+/* ── SERVICE CARDS ── */
+.bk-svc-list{padding:8px 16px 4px;}
+.bk-sc{
+  background:#fff;
+  border:1.5px solid rgba(184,133,46,.18);
+  border-radius:14px;
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:all .22s;
+  display:flex;align-items:center;
+  overflow:hidden;
+  position:relative;
+}
+.bk-sc:active{transform:scale(.99);}
+.bk-sc.on{
+  border-color:#B8852E;
+  box-shadow:0 2px 16px rgba(184,133,46,.18);
+}
+/* image col */
+.bk-sc-img{
+  width:90px;height:80px;
+  flex-shrink:0;
+  overflow:hidden;
+  position:relative;
+}
+.bk-sc-img-inner{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;
+  background:linear-gradient(135deg,#f5ead0,#ede0c0);
+}
+/* icon overlay */
+.bk-sc-ico{
+  position:absolute;bottom:5px;left:5px;
+  width:28px;height:28px;border-radius:50%;
+  background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  box-shadow:0 1px 6px rgba(0,0,0,.12);
+}
+/* content col */
+.bk-sc-body{
+  flex:1;padding:10px 10px 10px 12px;min-width:0;
+}
+.bk-sc-name{
+  font-family:'Playfair Display',serif;
+  font-size:15px;font-weight:500;
+  color:#2B1A0E;margin-bottom:2px;
+  line-height:1.3;
+}
+.bk-sc-desc{
+  font-size:11.5px;color:rgba(43,26,14,.5);
+  line-height:1.4;margin-bottom:5px;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:300;
+}
+/* badge */
+.bk-sc-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10.5px;font-weight:500;
+  padding:3px 9px;border-radius:10px;
+  font-family:'Be Vietnam Pro',sans-serif;
+}
+.bk-sc-badge.hot{background:#fff3e0;color:#c0450a;}
+.bk-sc-badge.office{background:#f0f4ff;color:#4466cc;}
+.bk-sc-badge.save{background:#f3e8ff;color:#7744aa;}
+.bk-sc-badge.free{background:#e8f5e9;color:#2e7d32;}
+/* price col */
+.bk-sc-price{
+  padding:10px 14px 10px 8px;
+  text-align:right;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:flex-end;justify-content:center;
+  gap:2px;
+}
+.bk-sc-dur{
+  font-size:10.5px;color:rgba(43,26,14,.4);
+  font-family:'Be Vietnam Pro',sans-serif;
+  display:flex;align-items:center;gap:3px;
+  white-space:nowrap;
+}
+.bk-sc-from{font-size:10px;color:rgba(43,26,14,.4);font-family:'Be Vietnam Pro',sans-serif;}
+.bk-sc-amt{
+  font-size:16px;font-weight:600;
+  color:#B8852E;
+  font-family:'Be Vietnam Pro',sans-serif;
+  white-space:nowrap;
+}
+.bk-sc.on .bk-sc-amt{color:#3A5028;}
+/* radio circle */
+.bk-sc-radio{
+  width:22px;height:22px;border-radius:50%;
+  border:2px solid rgba(184,133,46,.3);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .2s;
+  margin-right:4px;
+}
+.bk-sc-radio::after{
+  content:'';width:10px;height:10px;border-radius:50%;
+  background:transparent;transition:all .2s;
+}
+.bk-sc.on .bk-sc-radio{border-color:#B8852E;}
+.bk-sc.on .bk-sc-radio::after{background:#B8852E;}
+
+/* ── FORM (step 2 & 3) ── */
+.bk-form-wrap{padding:8px 20px 4px;}
 .bkf{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
-.bkf label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(110,65,10,.65);font-weight:500;}
-.bkf label .req{color:rgba(180,60,20,.7);margin-left:2px;}
-.bkf input,.bkf select,.bkf textarea{background:rgba(255,251,242,.9);border:1px solid rgba(184,133,46,.3);border-radius:2px;padding:13px 15px;font-family:'Be Vietnam Pro',sans-serif;font-size:15px;font-weight:300;color:var(--wood);outline:none;transition:all .25s;appearance:none;-webkit-appearance:none;width:100%;}
-.bkf input::placeholder,.bkf textarea::placeholder{color:rgba(120,80,30,.35);font-style:italic;font-size:14px;}
-.bkf select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23D4A84E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer;}
-.bkf select option{background:#f5e9ce;color:var(--wood);}
-.bkf input:focus,.bkf select:focus,.bkf textarea:focus{border-color:var(--gold);background:#fff8ec;box-shadow:0 0 0 3px rgba(184,133,46,.06);}
-.bkf input.bke,.bkf select.bke{border-color:rgba(200,80,80,.5);box-shadow:0 0 0 3px rgba(200,80,80,.05);}
-.bkf .bkem{font-size:10px;color:#a04040;display:none;}
+.bkf label{
+  font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(43,26,14,.55);font-weight:500;
+  font-family:'Be Vietnam Pro',sans-serif;
+}
+.bkf label .req{color:#c0450a;margin-left:2px;}
+.bkf input,.bkf select,.bkf textarea{
+  background:#fff;
+  border:1.5px solid rgba(184,133,46,.22);
+  border-radius:12px;
+  padding:13px 16px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:15px;font-weight:400;
+  color:#2B1A0E;outline:none;
+  transition:all .22s;
+  appearance:none;-webkit-appearance:none;width:100%;
+}
+.bkf input::placeholder,.bkf textarea::placeholder{
+  color:rgba(43,26,14,.28);font-size:14px;
+}
+.bkf select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8852E' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
+  padding-right:40px;cursor:pointer;
+}
+.bkf select option{background:#fdf8f0;color:#2B1A0E;}
+.bkf input:focus,.bkf select:focus,.bkf textarea:focus{
+  border-color:#3A5028;
+  box-shadow:0 0 0 3px rgba(58,80,40,.08);
+}
+.bkf input.bke,.bkf select.bke{
+  border-color:#c0450a;
+  box-shadow:0 0 0 3px rgba(192,69,10,.06);
+}
+.bkf .bkem{font-size:10.5px;color:#c0450a;display:none;padding-left:4px;}
 .bkf .bkem.on{display:block;}
-.bkf textarea{resize:none;height:76px;line-height:1.65;font-size:14px;}
+.bkf textarea{resize:none;height:80px;line-height:1.65;font-size:14px;border-radius:12px;}
 .bk2col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.bk-ts-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
-.bk-ts{padding:11px 16px;border:1px solid rgba(184,133,46,.16);border-radius:2px;font-size:13px;letter-spacing:.5px;color:rgba(100,65,20,.55);cursor:pointer;transition:all .18s;background:rgba(255,248,235,.7);min-width:60px;text-align:center;}
-.bk-ts:hover{border-color:var(--gold);color:var(--wood);}
-.bk-ts.on{background:rgba(184,133,46,.18);border-color:var(--gold);color:var(--wood);}
-.bk-note{background:rgba(184,133,46,.07);border-left:2px solid var(--gold);padding:10px 14px;margin-bottom:14px;border-radius:0 2px 2px 0;}
-.bk-note p{font-size:11px;color:rgba(90,55,15,.6);line-height:1.7;font-family:'Noto Serif',serif;font-style:italic;}
-.bk-note strong{color:var(--gold2);font-style:normal;}
-.bk-sec-lbl{font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:rgba(110,65,10,.55);margin-bottom:10px;margin-top:4px;display:flex;align-items:center;gap:8px;}
-.bk-sec-lbl::after{content:'';flex:1;height:1px;background:rgba(184,133,46,.2);}
-.bk-btns{display:flex;gap:10px;padding-top:8px;align-items:center;flex-wrap:wrap;}
-.bk-next,.bk-submit{background:var(--gold);color:var(--dark);border:none;padding:13px 26px;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;cursor:pointer;border-radius:2px;font-weight:500;transition:all .25s;display:flex;align-items:center;gap:7px;flex-shrink:0;}
-.bk-next:hover,.bk-submit:hover{background:var(--gold2);box-shadow:0 5px 18px rgba(184,133,46,.28);transform:translateY(-1px);}
-.bk-submit{background:linear-gradient(130deg,var(--gold),var(--gold2));padding:13px 30px;font-weight:600;box-shadow:0 3px 14px rgba(184,133,46,.2);}
-.bk-back{background:transparent;border:1px solid rgba(139,90,20,.3);color:rgba(90,55,15,.55);padding:12px 20px;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s;flex-shrink:0;}
-.bk-back:hover{border-color:var(--gold);color:var(--wood);}
-.bk-hint{font-size:10px;color:rgba(100,65,20,.4);letter-spacing:.2px;}
-.bk-svc-em{font-size:10px;color:#a04040;display:none;margin-bottom:8px;}
+
+/* ── TIME SLOTS ── */
+.bk-ts-wrap{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:8px;margin-top:6px;
+}
+.bk-ts{
+  padding:10px 4px;
+  border:1.5px solid rgba(184,133,46,.2);
+  border-radius:10px;
+  font-size:13px;font-weight:500;
+  color:rgba(43,26,14,.55);
+  cursor:pointer;transition:all .18s;
+  background:#fff;
+  text-align:center;
+  font-family:'Be Vietnam Pro',sans-serif;
+}
+.bk-ts:hover{border-color:#3A5028;color:#3A5028;}
+.bk-ts.on{
+  background:#3A5028;border-color:#3A5028;
+  color:#fff;font-weight:600;
+  box-shadow:0 2px 8px rgba(58,80,40,.25);
+}
+
+/* ── NOTE BOX ── */
+.bk-note{
+  background:#fffbf0;
+  border:1px solid rgba(184,133,46,.2);
+  border-radius:10px;
+  padding:10px 14px;
+  margin:0 20px 14px;
+}
+.bk-note p{
+  font-size:11.5px;color:rgba(43,26,14,.5);
+  line-height:1.7;font-family:'Be Vietnam Pro',sans-serif;font-weight:300;
+}
+.bk-note strong{color:#3A5028;font-weight:500;}
+
+/* ── FALLBACK ── */
+#bk-fallback{
+  display:none;
+  background:#f0f8ec;
+  border:1.5px solid rgba(58,80,40,.3);
+  border-radius:12px;
+  padding:14px 16px;
+  margin:0 20px 14px;
+  animation:bkIn .3s ease both;
+}
+#bk-fallback p{font-size:12px;color:rgba(43,26,14,.65);line-height:1.7;margin-bottom:10px;font-family:'Be Vietnam Pro',sans-serif;}
+#bk-fallback strong{color:#3A5028;}
+.bk-fallback-lnk{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#3A5028;color:#fff;
+  padding:11px 22px;border-radius:10px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:12px;letter-spacing:.5px;font-weight:500;
+  text-decoration:none;transition:all .22s;
+}
+.bk-fallback-lnk:hover{background:#587040;}
+
+/* ── SVC ERROR ── */
+.bk-svc-em{
+  font-size:11px;color:#c0450a;display:none;
+  padding:0 20px 8px;font-family:'Be Vietnam Pro',sans-serif;
+}
 .bk-svc-em.on{display:block;}
-#bk-fallback{display:none;background:rgba(255,243,210,.9);border:1px solid rgba(184,133,46,.45);border-radius:3px;padding:14px 16px;margin-bottom:14px;animation:bkSlide .3s ease both;}
-#bk-fallback p{font-size:12px;color:rgba(80,50,10,.7);line-height:1.7;margin-bottom:10px;font-family:'Noto Serif',serif;font-style:italic;}
-#bk-fallback strong{color:var(--gold2);font-style:normal;}
-.bk-fallback-lnk{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--dark);padding:11px 22px;border-radius:2px;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;font-weight:500;text-decoration:none;transition:all .25s;}
-.bk-fallback-lnk:hover{background:var(--gold2);}
-#bk-ok{display:none;text-align:center;padding:16px 0 8px;}
-.bk-ok-icon{font-size:48px;display:block;margin-bottom:12px;animation:bkPop .5s cubic-bezier(.34,1.56,.64,1) both;}
-@keyframes bkPop{from{opacity:0;transform:scale(.5);}to{opacity:1;transform:scale(1);}}
-#bk-ok h3{font-family:'Playfair Display',serif;font-size:21px;font-weight:400;color:var(--wood);margin-bottom:10px;}
-#bk-ok h3 em{font-style:italic;color:var(--gold2);}
-.bk-ok-summary{background:rgba(255,249,238,.8);border:1px solid rgba(184,133,46,.25);border-radius:3px;padding:14px 18px;margin:0 auto 16px;max-width:400px;text-align:left;}
-.bk-ok-summary p{font-size:12px;color:rgba(80,50,15,.7);line-height:2;font-family:'Be Vietnam Pro',sans-serif;}
-.bk-ok-summary strong{color:var(--gold2);font-weight:500;}
-.bk-ok-note{font-size:11.5px;color:rgba(100,65,20,.5);line-height:1.7;font-family:'Noto Serif',serif;font-style:italic;max-width:340px;margin:0 auto 18px;}
-.bk-zalo-a{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--dark);border:none;padding:13px 30px;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;border-radius:2px;cursor:pointer;font-weight:500;transition:all .25s;text-decoration:none;}
-.bk-zalo-a:hover{background:var(--gold2);box-shadow:0 5px 18px rgba(184,133,46,.28);transform:translateY(-1px);}
-.bk-new{display:block;margin-top:12px;background:none;border:none;color:rgba(100,65,20,.35);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:color .2s;}
-.bk-new:hover{color:var(--wood);}
-@media(max-width:480px){
-  .bk-hd,.bk-body{padding-left:18px;padding-right:18px;}
-  .bk-steps{padding-left:18px;padding-right:18px;}
-  .bk-svc-grid,.bk2col{grid-template-columns:1fr;}
-  .bk-btns{flex-direction:column;align-items:stretch;}
-  .bk-next,.bk-submit,.bk-back{justify-content:center;}
-  .bk-step-lbl{display:none;}
+
+/* ── STICKY FOOTER BUTTONS ── */
+.bk-footer{
+  flex-shrink:0;
+  background:#fdf8f0;
+  border-top:1px solid rgba(184,133,46,.12);
+  padding:12px 20px 20px;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
+}
+.bk-trust{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.bk-trust-icon{font-size:22px;}
+.bk-trust-text{flex:1;}
+.bk-trust-main{font-size:12.5px;font-weight:500;color:#2B1A0E;font-family:'Be Vietnam Pro',sans-serif;}
+.bk-trust-stars{font-size:11px;color:#B8852E;letter-spacing:1px;}
+.bk-btn-next,.bk-btn-submit{
+  width:100%;
+  background:linear-gradient(135deg,#C4922A,#B8852E);
+  color:#fff;border:none;
+  border-radius:14px;
+  padding:16px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:15px;font-weight:600;letter-spacing:.3px;
+  cursor:pointer;transition:all .25s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 20px rgba(184,133,46,.35);
+}
+.bk-btn-next:hover,.bk-btn-submit:hover{
+  background:linear-gradient(135deg,#D4A84E,#C4922A);
+  box-shadow:0 6px 24px rgba(184,133,46,.45);
+  transform:translateY(-1px);
+}
+.bk-btn-next:active,.bk-btn-submit:active{transform:scale(.98);}
+.bk-secure{
+  text-align:center;margin-top:7px;
+  font-size:10.5px;color:rgba(43,26,14,.35);
+  font-family:'Be Vietnam Pro',sans-serif;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+}
+/* back row */
+.bk-back-row{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.bk-btn-back{
+  background:transparent;border:1.5px solid rgba(58,80,40,.3);
+  color:rgba(43,26,14,.55);border-radius:12px;
+  padding:14px 20px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:13px;font-weight:500;letter-spacing:.3px;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.bk-btn-back:hover{border-color:#3A5028;color:#3A5028;}
+
+/* ── SUCCESS ── */
+#bk-ok{display:none;text-align:center;padding:24px 24px 8px;}
+.bk-ok-lotus{font-size:52px;display:block;margin-bottom:10px;animation:bkPop .55s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes bkPop{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+#bk-ok h3{font-family:'Playfair Display',serif;font-size:23px;font-weight:400;color:#2B1A0E;margin-bottom:6px;}
+#bk-ok h3 em{font-style:italic;color:#B8852E;}
+#bk-ok .bk-ok-sum{
+  background:#fff;border:1.5px solid rgba(184,133,46,.2);
+  border-radius:14px;padding:14px 18px;
+  margin:14px 0;text-align:left;
+}
+#bk-ok .bk-ok-sum p{
+  font-size:13px;color:rgba(43,26,14,.65);
+  line-height:1.9;font-family:'Be Vietnam Pro',sans-serif;
+}
+#bk-ok .bk-ok-sum strong{color:#3A5028;font-weight:500;}
+#bk-ok .bk-ok-note{
+  font-size:12px;color:rgba(43,26,14,.45);line-height:1.7;
+  font-family:'Be Vietnam Pro',sans-serif;font-weight:300;
+  margin-bottom:6px;
+}
+.bk-new{
+  display:block;margin-top:10px;background:none;border:none;
+  color:rgba(43,26,14,.3);font-size:11px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:color .2s;
+}
+.bk-new:hover{color:rgba(43,26,14,.6);}
+
+/* ── DESKTOP: center modal, rounded all sides ── */
+@media(min-width:600px){
+  #bk-overlay{align-items:center;}
+  .bk-modal{
+    border-radius:20px;max-height:88vh;
+    transform:translateY(20px) scale(.97);
+  }
+  #bk-overlay.open .bk-modal{transform:translateY(0) scale(1);}
+  .bk-handle{display:none;}
+}
+@media(max-width:400px){
+  .bk-ts-wrap{grid-template-columns:repeat(3,1fr);}
+  .bk2col{grid-template-columns:1fr;}
 }
 </style>
 
+<!-- MODAL HTML -->
 <div id="bk-overlay" onclick="bkOvClick(event)">
 <div class="bk-modal">
+  <div class="bk-handle"></div>
+
+  <!-- HEADER -->
   <div class="bk-hd">
-    <div class="bk-chip">Đặt Lịch Online</div>
-    <h2 class="bk-title">Giữ chỗ buổi <em>thư giãn</em></h2>
-    <p class="bk-sub">Nhân viên gọi lại xác nhận trong 30 phút · Mở cửa 8:00–20:00</p>
-    <button class="bk-x" onclick="bkClose()" aria-label="Đóng">✕</button>
+    <span class="bk-lotus">🪷</span>
+    <h2 class="bk-title">Đặt lịch <em>thư giãn</em> hôm nay</h2>
+    <div class="bk-sub">
+      <span>⏱ Nhân viên sẽ gọi xác nhận trong 15 phút</span>
+      <span>🕐 Mở cửa: 8:00 – 20:00</span>
+    </div>
+    <div class="bk-urgency">🔥 Còn 5 slot trống hôm nay</div>
+    <button class="bk-x" onclick="bkClose()">✕</button>
   </div>
-  <div class="bk-steps" id="bk-steps">
-    <div class="bk-step-item active" id="bks1"><div class="bk-step-num">1</div><div class="bk-step-lbl">Dịch vụ</div></div>
-    <div class="bk-step-item" id="bks2"><div class="bk-step-num">2</div><div class="bk-step-lbl">Thời gian</div></div>
-    <div class="bk-step-item" id="bks3"><div class="bk-step-num">3</div><div class="bk-step-lbl">Thông tin</div></div>
+
+  <!-- STEP BAR -->
+  <div class="bk-stepbar" id="bk-steps">
+    <div class="bk-si active" id="bks1">
+      <div class="bk-snum">1</div>
+      <div class="bk-slbl">Chọn dịch vụ</div>
+    </div>
+    <div class="bk-si" id="bks2">
+      <div class="bk-snum">2</div>
+      <div class="bk-slbl">Chọn thời gian</div>
+    </div>
+    <div class="bk-si" id="bks3">
+      <div class="bk-snum">3</div>
+      <div class="bk-slbl">Xác nhận thông tin</div>
+    </div>
   </div>
+
+  <!-- SCROLLABLE BODY -->
   <div class="bk-body">
 
-    <!-- STEP 1 -->
+    <!-- ── STEP 1: DỊCH VỤ ── -->
     <div class="bkp on" id="bkp1">
-      <div class="bk-svc-grid">
-        <div class="bk-sc" data-svc="Gội Đầu Dưỡng Sinh" onclick="bkSvc(this)"><div class="bk-tick">✓</div><span class="bk-sc-icon">🌿</span><div class="bk-sc-body"><div class="bk-sc-name">Gội Đầu Dưỡng Sinh</div><div class="bk-sc-sub">Thảo dược Đông y</div></div></div>
-        <div class="bk-sc" data-svc="Massage Thư Giãn" onclick="bkSvc(this)"><div class="bk-tick">✓</div><span class="bk-sc-icon">💆</span><div class="bk-sc-body"><div class="bk-sc-name">Massage Thư Giãn</div><div class="bk-sc-sub">Vai gáy, toàn thân</div></div></div>
-        <div class="bk-sc" data-svc="Chăm Sóc Da Mặt" onclick="bkSvc(this)"><div class="bk-tick">✓</div><span class="bk-sc-icon">✨</span><div class="bk-sc-body"><div class="bk-sc-name">Chăm Sóc Da Mặt</div><div class="bk-sc-sub">Làm sạch, dưỡng ẩm</div></div></div>
-        <div class="bk-sc" data-svc="Trị Liệu Đông Y" onclick="bkSvc(this)"><div class="bk-tick">✓</div><span class="bk-sc-icon">🌸</span><div class="bk-sc-body"><div class="bk-sc-name">Trị Liệu Đông Y</div><div class="bk-sc-sub">Bấm huyệt, giác hơi</div></div></div>
-        <div class="bk-sc" data-svc="Gói Combo Toàn Thân" onclick="bkSvc(this)"><div class="bk-tick">✓</div><span class="bk-sc-icon">🎋</span><div class="bk-sc-body"><div class="bk-sc-name">Gói Combo Toàn Thân</div><div class="bk-sc-sub">Kết hợp liệu pháp</div></div></div>
-        <div class="bk-sc" data-svc="Tư Vấn Trực Tiếp" onclick="bkSvc(this)"><div class="bk-tick">✓</div><span class="bk-sc-icon">🍃</span><div class="bk-sc-body"><div class="bk-sc-name">Tư Vấn Trực Tiếp</div><div class="bk-sc-sub">Đánh giá, lên phác đồ</div></div></div>
+      <div class="bk-sec-title">Chọn dịch vụ phù hợp với bạn</div>
+      <div class="bk-svc-list">
+
+        <div class="bk-sc" data-svc="Gội đầu dưỡng sinh" onclick="bkSvc(this)">
+          <div class="bk-sc-img">
+            <div class="bk-sc-img-inner">🌿</div>
+            <div class="bk-sc-ico">🌱</div>
+          </div>
+          <div class="bk-sc-body">
+            <div class="bk-sc-name">Gội đầu dưỡng sinh</div>
+            <div class="bk-sc-desc">Thảo dược Đông y thư giãn sâu</div>
+            <span class="bk-sc-badge hot">🔥 Bán chạy nhất</span>
+          </div>
+          <div class="bk-sc-price">
+            <div class="bk-sc-dur">⏱ 60 phút</div>
+            <div class="bk-sc-from">Từ</div>
+            <div class="bk-sc-amt">199K</div>
+          </div>
+          <div class="bk-sc-radio"></div>
+        </div>
+
+        <div class="bk-sc" data-svc="Massage thư giãn" onclick="bkSvc(this)">
+          <div class="bk-sc-img">
+            <div class="bk-sc-img-inner">💆</div>
+            <div class="bk-sc-ico">🧘</div>
+          </div>
+          <div class="bk-sc-body">
+            <div class="bk-sc-name">Massage thư giãn</div>
+            <div class="bk-sc-desc">Giảm căng thẳng, nhức mỏi toàn thân</div>
+            <span class="bk-sc-badge office">☆ Phù hợp dân văn phòng</span>
+          </div>
+          <div class="bk-sc-price">
+            <div class="bk-sc-dur">⏱ 90 phút</div>
+            <div class="bk-sc-from">Từ</div>
+            <div class="bk-sc-amt">299K</div>
+          </div>
+          <div class="bk-sc-radio"></div>
+        </div>
+
+        <div class="bk-sc" data-svc="Gói combo toàn thân" onclick="bkSvc(this)">
+          <div class="bk-sc-img">
+            <div class="bk-sc-img-inner">🎋</div>
+            <div class="bk-sc-ico">🌸</div>
+          </div>
+          <div class="bk-sc-body">
+            <div class="bk-sc-name">Gói combo toàn thân</div>
+            <div class="bk-sc-desc">Gội đầu + Massage + Ngâm chân</div>
+            <span class="bk-sc-badge save">💎 Tiết kiệm 30%</span>
+          </div>
+          <div class="bk-sc-price">
+            <div class="bk-sc-dur">⏱ 120 phút</div>
+            <div class="bk-sc-from">Từ</div>
+            <div class="bk-sc-amt">499K</div>
+          </div>
+          <div class="bk-sc-radio"></div>
+        </div>
+
+        <div class="bk-sc" data-svc="Chăm sóc da mặt" onclick="bkSvc(this)">
+          <div class="bk-sc-img">
+            <div class="bk-sc-img-inner">✨</div>
+            <div class="bk-sc-ico">💫</div>
+          </div>
+          <div class="bk-sc-body">
+            <div class="bk-sc-name">Chăm sóc da mặt</div>
+            <div class="bk-sc-desc">Làm sạch, dưỡng ẩm chuyên sâu</div>
+          </div>
+          <div class="bk-sc-price">
+            <div class="bk-sc-dur">⏱ 60 phút</div>
+            <div class="bk-sc-from">Từ</div>
+            <div class="bk-sc-amt">249K</div>
+          </div>
+          <div class="bk-sc-radio"></div>
+        </div>
+
+        <div class="bk-sc" data-svc="Trị liệu Đông y" onclick="bkSvc(this)">
+          <div class="bk-sc-img">
+            <div class="bk-sc-img-inner">🌸</div>
+            <div class="bk-sc-ico">🍃</div>
+          </div>
+          <div class="bk-sc-body">
+            <div class="bk-sc-name">Trị liệu Đông y</div>
+            <div class="bk-sc-desc">Bấm huyệt, giác hơi, thải độc</div>
+          </div>
+          <div class="bk-sc-price">
+            <div class="bk-sc-dur">⏱ 90 phút</div>
+            <div class="bk-sc-from">Từ</div>
+            <div class="bk-sc-amt">349K</div>
+          </div>
+          <div class="bk-sc-radio"></div>
+        </div>
+
+        <div class="bk-sc" data-svc="Tư vấn trực tiếp" onclick="bkSvc(this)">
+          <div class="bk-sc-img">
+            <div class="bk-sc-img-inner">🍃</div>
+            <div class="bk-sc-ico">👥</div>
+          </div>
+          <div class="bk-sc-body">
+            <div class="bk-sc-name">Tư vấn trực tiếp</div>
+            <div class="bk-sc-desc">Đánh giá tình trạng, lên phác đồ</div>
+            <span class="bk-sc-badge free">✓ Miễn phí</span>
+          </div>
+          <div class="bk-sc-price">
+            <div class="bk-sc-dur">⏱ 30 phút</div>
+            <div class="bk-sc-from">&nbsp;</div>
+            <div class="bk-sc-amt" style="color:#3A5028;">Miễn phí</div>
+          </div>
+          <div class="bk-sc-radio"></div>
+        </div>
+
       </div>
       <div class="bk-svc-em" id="bk-svc-em">Vui lòng chọn ít nhất 1 dịch vụ</div>
-      <div class="bkf">
-        <label>Cơ sở <span class="req">*</span></label>
-        <select id="bk-branch" autocomplete="off">
-          <option value="">— Chọn cơ sở —</option>
-          <option value="Cơ sở I – VSIP, TP Quảng Ngãi">Cơ sở I – 42 Thiên Phát, VSIP, TP Quảng Ngãi</option>
-          <option value="Cơ sở II – H. Bình Sơn">Cơ sở II – Ngã 4 Ký túc xá Hòa Phát, H. Bình Sơn</option>
-        </select>
-        <div class="bkem" id="bk-branch-em">Vui lòng chọn cơ sở</div>
-      </div>
-      <div class="bk-btns">
-        <button class="bk-next" onclick="bkGo(2)">Tiếp Theo →</button>
-        <span class="bk-hint">Có thể chọn nhiều dịch vụ</span>
-      </div>
-    </div>
 
-    <!-- STEP 2 -->
-    <div class="bkp" id="bkp2">
-      <div class="bk2col">
+      <div class="bk-form-wrap">
         <div class="bkf">
-          <label>Ngày hẹn <span class="req">*</span></label>
-          <input type="date" id="bk-date" autocomplete="off">
-          <div class="bkem" id="bk-date-em">Vui lòng chọn ngày</div>
-        </div>
-        <div class="bkf">
-          <label>Số người</label>
-          <select id="bk-guests" autocomplete="off">
-            <option value="1 người">1 người</option>
-            <option value="2 người">2 người</option>
-            <option value="3 người">3 người</option>
-            <option value="4 người trở lên">4 người trở lên</option>
+          <label>Cơ sở <span class="req">*</span></label>
+          <select id="bk-branch" autocomplete="off">
+            <option value="">— Chọn cơ sở —</option>
+            <option value="Cơ sở I – VSIP, TP Quảng Ngãi">Cơ sở I – 42 Thiên Phát, VSIP, TP Quảng Ngãi</option>
+            <option value="Cơ sở II – H. Bình Sơn">Cơ sở II – Ngã 4 Ký túc xá Hòa Phát, H. Bình Sơn</option>
           </select>
+          <div class="bkem" id="bk-branch-em">Vui lòng chọn cơ sở</div>
         </div>
-      </div>
-      <div class="bkf">
-        <label>Khung giờ <span class="req">*</span></label>
-        <div class="bk-ts-grid">
-          <div class="bk-ts" onclick="bkTime(this)">8:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">9:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">10:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">11:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">13:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">14:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">15:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">16:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">17:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">18:00</div>
-          <div class="bk-ts" onclick="bkTime(this)">19:00</div>
-        </div>
-        <div class="bkem" id="bk-time-em">Vui lòng chọn khung giờ</div>
-      </div>
-      <div class="bk-note"><p>Nếu khung giờ đã kín, nhân viên sẽ gọi để sắp xếp <strong>giờ phù hợp nhất</strong>.</p></div>
-      <div class="bk-btns">
-        <button class="bk-back" onclick="bkGo(1)">← Quay Lại</button>
-        <button class="bk-next" onclick="bkGo(3)">Tiếp Theo →</button>
       </div>
     </div>
 
-    <!-- STEP 3 — FIX 1: autocomplete="name" và autocomplete="tel" -->
-    <div class="bkp" id="bkp3">
-      <div class="bk-sec-lbl">Thông tin liên hệ</div>
-      <div class="bk2col">
-        <div class="bkf">
-          <label>Họ và tên <span class="req">*</span></label>
-          <input type="text" id="bk-name" autocomplete="name" placeholder="Nguyễn Thị ...">
-          <div class="bkem" id="bk-name-em">Vui lòng nhập họ tên</div>
+    <!-- ── STEP 2: THỜI GIAN ── -->
+    <div class="bkp" id="bkp2">
+      <div class="bk-sec-title">Chọn thời gian</div>
+      <div class="bk-form-wrap">
+        <div class="bk2col">
+          <div class="bkf">
+            <label>Ngày hẹn <span class="req">*</span></label>
+            <input type="date" id="bk-date" autocomplete="off">
+            <div class="bkem" id="bk-date-em">Vui lòng chọn ngày</div>
+          </div>
+          <div class="bkf">
+            <label>Số người</label>
+            <select id="bk-guests" autocomplete="off">
+              <option value="1 người">1 người</option>
+              <option value="2 người">2 người</option>
+              <option value="3 người">3 người</option>
+              <option value="4 người trở lên">4 người trở lên</option>
+            </select>
+          </div>
         </div>
         <div class="bkf">
-          <label>Số điện thoại <span class="req">*</span></label>
-          <input type="tel" id="bk-phone" autocomplete="tel" inputmode="tel" placeholder="0987 xxx xxx">
-          <div class="bkem" id="bk-phone-em">Nhập số điện thoại hợp lệ</div>
+          <label>Khung giờ <span class="req">*</span></label>
+          <div class="bk-ts-wrap">
+            <div class="bk-ts" onclick="bkTime(this)">8:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">9:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">10:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">11:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">13:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">14:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">15:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">16:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">17:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">18:00</div>
+            <div class="bk-ts" onclick="bkTime(this)">19:00</div>
+          </div>
+          <div class="bkem" id="bk-time-em">Vui lòng chọn khung giờ</div>
         </div>
       </div>
-      <div class="bkf">
-        <label>Ghi chú / Yêu cầu đặc biệt</label>
-        <textarea id="bk-notetxt" autocomplete="off" placeholder="Tình trạng sức khoẻ, dị ứng thảo dược, yêu cầu riêng... (không bắt buộc)"></textarea>
+      <div class="bk-note">
+        <p>Nếu khung giờ đã kín, nhân viên sẽ gọi để sắp xếp <strong>giờ phù hợp nhất</strong>.</p>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: THÔNG TIN ── -->
+    <div class="bkp" id="bkp3">
+      <div class="bk-sec-title">Xác nhận thông tin</div>
+      <div class="bk-form-wrap">
+        <div class="bk2col">
+          <div class="bkf">
+            <label>Họ và tên <span class="req">*</span></label>
+            <input type="text" id="bk-name" autocomplete="name" placeholder="Nguyễn Thị ...">
+            <div class="bkem" id="bk-name-em">Vui lòng nhập họ tên</div>
+          </div>
+          <div class="bkf">
+            <label>Số điện thoại <span class="req">*</span></label>
+            <input type="tel" id="bk-phone" autocomplete="tel" inputmode="tel" placeholder="0987 xxx xxx">
+            <div class="bkem" id="bk-phone-em">Nhập số điện thoại hợp lệ</div>
+          </div>
+        </div>
+        <div class="bkf">
+          <label>Ghi chú / Yêu cầu đặc biệt</label>
+          <textarea id="bk-notetxt" autocomplete="off" placeholder="Tình trạng sức khoẻ, dị ứng thảo dược, yêu cầu riêng..."></textarea>
+        </div>
       </div>
 
-      <!-- FIX 3: Fallback banner khi popup bị block -->
       <div id="bk-fallback">
-        <p>Không mở được ứng dụng Tin nhắn tự động. Nhấn nút bên dưới để thử lại — nội dung đã được điền sẵn:</p>
+        <p>Không mở được ứng dụng Tin nhắn tự động. Nhấn bên dưới để thử lại:</p>
         <a id="bk-fallback-lnk" href="#" target="_blank" class="bk-fallback-lnk">✉️ &nbsp; Mở Tin Nhắn Thủ Công</a>
       </div>
 
-      <div class="bk-note"><p>Sau khi nhấn <strong>"Gửi Đặt Lịch"</strong>, ứng dụng Tin nhắn sẽ mở với nội dung soạn sẵn — chỉ cần nhấn <strong>Gửi</strong> là xong.</p></div>
-      <div class="bk-btns">
-        <button class="bk-back" onclick="bkGo(2)">← Quay Lại</button>
-        <button class="bk-submit" id="bk-submit-btn" onclick="bkSubmit()">✉️ &nbsp; Gửi Đặt Lịch</button>
+      <div class="bk-note">
+        <p>Sau khi nhấn <strong>"Tiếp tục đặt lịch"</strong>, ứng dụng Tin nhắn sẽ mở với nội dung soạn sẵn — chỉ cần nhấn <strong>Gửi</strong> là xong.</p>
       </div>
     </div>
 
-    <!-- SUCCESS — có summary booking -->
+    <!-- ── SUCCESS ── -->
     <div id="bk-ok">
-      <span class="bk-ok-icon">🌿</span>
+      <span class="bk-ok-lotus">🌿</span>
       <h3>Đặt lịch <em>thành công!</em></h3>
-      <div class="bk-ok-summary" id="bk-ok-summary"></div>
-      <p class="bk-ok-note">Nhân viên xác nhận qua Zalo hoặc gọi lại trong 30 phút. Hẹn gặp bạn tại spa 🍃</p>
-      <a href="tel:0987500300" class="bk-zalo-a">📞 &nbsp; Gọi Lại 0987.500.300</a>
+      <div class="bk-ok-sum" id="bk-ok-sum"></div>
+      <p class="bk-ok-note">Nhân viên sẽ gọi xác nhận trong 15 phút. Hẹn gặp bạn tại spa 🍃</p>
       <button class="bk-new" onclick="bkReset()">↺ Đặt lịch mới</button>
     </div>
 
+  </div><!-- /bk-body -->
+
+  <!-- STICKY FOOTER -->
+  <div class="bk-footer" id="bk-footer">
+    <div class="bk-trust" id="bk-trust">
+      <div class="bk-trust-icon">👥</div>
+      <div class="bk-trust-text">
+        <div class="bk-trust-main">2.000+ khách hàng tin tưởng</div>
+        <div class="bk-trust-stars">★★★★½ 4.9/5</div>
+      </div>
+    </div>
+    <div class="bk-back-row" id="bk-back-row" style="display:none;">
+      <button class="bk-btn-back" onclick="bkGo(window._bkStep-1)">← Quay lại</button>
+      <button class="bk-btn-submit" id="bk-submit-btn" onclick="bkSubmit()" style="flex:1;">✉️ &nbsp; Gửi đặt lịch</button>
+    </div>
+    <button class="bk-btn-next" id="bk-btn-next" onclick="bkNext()">Tiếp tục đặt lịch →</button>
+    <div class="bk-secure">🔒 Thông tin của bạn được bảo mật tuyệt đối</div>
   </div>
-</div>
-</div>
+
+</div><!-- /bk-modal -->
+</div><!-- /bk-overlay -->
 
 <script>
 (function(){
   var ZALO='0987500300';
   var S={svcs:[],branch:'',date:'',time:'',guests:'1 người',name:'',phone:'',note:''};
-  var step=1;
+  window._bkStep=1;
   var zaloURL='';
 
+  /* iOS vh */
   function setVh(){document.documentElement.style.setProperty('--vh',window.innerHeight*.01+'px');}
   setVh();window.addEventListener('resize',setVh);
 
+  /* Open / Close */
   window.bkOpen=function(){
     document.getElementById('bk-overlay').classList.add('open');
     var st=window.scrollY||window.pageYOffset;
     document.body.classList.add('bk-locked');
     document.body.style.top='-'+st+'px';
     document.body.dataset.bkScroll=st;
-    /* Ẩn chat FAB khi modal mở */
     var fab=document.getElementById('spa-chat-fab');
     if(fab)fab.style.cssText='visibility:hidden;opacity:0;pointer-events:none;transition:opacity .2s';
   };
@@ -1767,19 +2278,48 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     document.body.classList.remove('bk-locked');
     document.body.style.top='';
     window.scrollTo(0,st);
-    /* Hiện lại chat FAB khi modal đóng */
     var fab=document.getElementById('spa-chat-fab');
     if(fab)fab.style.cssText='visibility:visible;opacity:1;pointer-events:all;transition:opacity .3s';
   };
   window.bkOvClick=function(e){if(e.target===document.getElementById('bk-overlay'))bkClose();};
   document.addEventListener('keydown',function(e){if(e.key==='Escape')bkClose();});
 
+  /* Date min = tomorrow */
   (function(){
     var el=document.getElementById('bk-date');
     var t=new Date();t.setDate(t.getDate()+1);
     el.min=t.toISOString().split('T')[0];
   })();
 
+  /* Update footer UI per step */
+  function updateFooter(step){
+    var trust=document.getElementById('bk-trust');
+    var backRow=document.getElementById('bk-back-row');
+    var nextBtn=document.getElementById('bk-btn-next');
+    var submitBtn=document.getElementById('bk-submit-btn');
+    if(step===1){
+      trust.style.display='flex';
+      backRow.style.display='none';
+      nextBtn.style.display='flex';
+      nextBtn.textContent='Tiếp tục đặt lịch →';
+    } else if(step===2){
+      trust.style.display='none';
+      backRow.style.display='flex';
+      nextBtn.style.display='none';
+      submitBtn.style.display='none';
+      /* reuse back-row for next */
+      backRow.innerHTML='<button class="bk-btn-back" onclick="bkGo(1)">← Quay lại</button>'+
+        '<button class="bk-btn-next" onclick="bkNext()" style="flex:1;border-radius:12px;">Tiếp tục →</button>';
+    } else if(step===3){
+      trust.style.display='none';
+      backRow.style.display='flex';
+      nextBtn.style.display='none';
+      backRow.innerHTML='<button class="bk-btn-back" onclick="bkGo(2)">← Quay lại</button>'+
+        '<button class="bk-btn-submit" id="bk-submit-btn" onclick="bkSubmit()" style="flex:1;">✉️ Gửi đặt lịch</button>';
+    }
+  }
+
+  /* Service toggle */
   window.bkSvc=function(card){
     card.classList.toggle('on');
     var v=card.dataset.svc,i=S.svcs.indexOf(v);
@@ -1787,15 +2327,17 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     document.getElementById('bk-svc-em').classList.remove('on');
   };
 
+  /* Time pick */
   window.bkTime=function(el){
     document.querySelectorAll('.bk-ts').forEach(function(t){t.classList.remove('on');});
     el.classList.add('on');S.time=el.textContent.trim();
     document.getElementById('bk-time-em').classList.remove('on');
   };
 
+  /* Validate */
   function val(s){
     var ok=true;
-    function em(id,show){document.getElementById(id).classList[show?'add':'remove']('on');}
+    function em(id,show){var el=document.getElementById(id);if(el)el.classList[show?'add':'remove']('on');}
     function fe(id,show){var el=document.getElementById(id);if(el)el.classList[show?'add':'remove']('bke');}
     if(s===1){
       if(!S.svcs.length){em('bk-svc-em',true);ok=false;}
@@ -1823,22 +2365,32 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     return ok;
   }
 
+  /* Go to step */
   window.bkGo=function(next){
-    if(next>step&&!val(step))return;
-    document.getElementById('bkp'+step).classList.remove('on');
-    var cur=document.getElementById('bks'+step);
-    cur.classList.remove('active');
-    if(next>step)cur.classList.add('done');else cur.classList.remove('done');
-    step=next;
-    var panel=document.getElementById('bkp'+step);
+    var cur=window._bkStep;
+    document.getElementById('bkp'+cur).classList.remove('on');
+    var cs=document.getElementById('bks'+cur);
+    cs.classList.remove('active');
+    if(next>cur)cs.classList.add('done');else cs.classList.remove('done');
+    window._bkStep=next;
+    var panel=document.getElementById('bkp'+next);
     panel.classList.add('on');
     panel.style.animation='none';
     requestAnimationFrame(function(){panel.style.animation='';});
-    var nd=document.getElementById('bks'+step);
-    if(nd){nd.classList.remove('done');nd.classList.add('active');}
+    var ns=document.getElementById('bks'+next);
+    if(ns){ns.classList.remove('done');ns.classList.add('active');}
+    updateFooter(next);
     document.querySelector('.bk-body').scrollTop=0;
   };
 
+  /* Next button */
+  window.bkNext=function(){
+    var cur=window._bkStep;
+    if(!val(cur))return;
+    bkGo(cur+1);
+  };
+
+  /* Build SMS message */
   function buildMsg(){
     var code='MTT-'+Math.random().toString(36).slice(2,6).toUpperCase();
     var fmt=new Date(S.date+'T00:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
@@ -1858,39 +2410,32 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   }
 
   function buildSmsUrl(msg){
-    /* iOS dùng & , Android dùng ? — detect bằng userAgent */
     var isIos=/iPhone|iPad|iPod/i.test(navigator.userAgent);
-    var sep=isIos?'&':'?';
-    return 'sms:'+ZALO+sep+'body='+encodeURIComponent(msg);
+    return 'sms:'+ZALO+(isIos?'&':'?')+'body='+encodeURIComponent(msg);
   }
 
+  /* Submit */
   window.bkSubmit=function(){
     if(!val(3))return;
     var msg=buildMsg();
     var smsUrl=buildSmsUrl(msg);
-    zaloURL=smsUrl; /* reuse var cho fallback */
+    zaloURL=smsUrl;
     document.getElementById('bk-fallback-lnk').href=smsUrl;
-
-    /* Mở SMS app — location.href đáng tin hơn window.open cho sms: scheme */
     try{
       window.location.href=smsUrl;
-      /* Sau 1.5s nếu vẫn ở trang này → có thể bị block, hiện fallback */
       setTimeout(function(){
         document.getElementById('bk-fallback').style.display='block';
-        document.getElementById('bk-submit-btn').style.display='none';
         document.querySelector('.bk-body').scrollTop=0;
       },1500);
-      /* Đồng thời show success sau 800ms */
       setTimeout(function(){showSuccess(msg);},800);
     }catch(e){
       document.getElementById('bk-fallback').style.display='block';
-      document.getElementById('bk-submit-btn').style.display='none';
     }
   };
 
   function showSuccess(msg){
     var fmt=new Date(S.date+'T00:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-    document.getElementById('bk-ok-summary').innerHTML=
+    document.getElementById('bk-ok-sum').innerHTML=
       '<p>'+
       '<strong>Dịch vụ:</strong> '+S.svcs.join(', ')+'<br>'+
       '<strong>Cơ sở:</strong> '+S.branch+'<br>'+
@@ -1899,13 +2444,14 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
       '</p>';
     document.getElementById('bkp3').classList.remove('on');
     document.getElementById('bk-steps').style.visibility='hidden';
+    document.getElementById('bk-footer').style.display='none';
     document.getElementById('bk-ok').style.display='block';
   }
 
-  /* FIX 2: Object.assign thay vì S = {} để tránh bug closure reference */
+  /* Reset — Object.assign để tránh bug closure */
   window.bkReset=function(){
     Object.assign(S,{svcs:[],branch:'',date:'',time:'',guests:'1 người',name:'',phone:'',note:''});
-    step=1;zaloURL='';
+    window._bkStep=1;zaloURL='';
     document.querySelectorAll('.bk-sc').forEach(function(c){c.classList.remove('on');});
     document.querySelectorAll('.bk-ts').forEach(function(t){t.classList.remove('on');});
     ['bk-branch','bk-date','bk-name','bk-phone','bk-notetxt'].forEach(function(id){
@@ -1913,9 +2459,9 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     });
     document.getElementById('bk-guests').value='1 người';
     document.getElementById('bk-fallback').style.display='none';
-    document.getElementById('bk-submit-btn').style.display='';
     document.getElementById('bk-ok').style.display='none';
     document.getElementById('bk-steps').style.visibility='';
+    document.getElementById('bk-footer').style.display='';
     for(var i=1;i<=3;i++){
       var p=document.getElementById('bkp'+i),s=document.getElementById('bks'+i);
       if(p)p.classList.remove('on');
@@ -1923,9 +2469,12 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     }
     document.getElementById('bkp1').classList.add('on');
     document.getElementById('bks1').classList.add('active');
+    updateFooter(1);
     document.querySelector('.bk-body').scrollTop=0;
   };
 
+  /* Init footer */
+  updateFooter(1);
 })();
 </script>
 
