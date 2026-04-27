@@ -1507,168 +1507,145 @@ function switchTab(id){
 </script>
 
 <!-- ══════════════════════════════════════════
-     BOOKING MODAL v5 — Premium UI Redesign
+     BOOKING FULLPAGE v6 — Full-screen Stepper
 ══════════════════════════════════════════ -->
 <style>
-/* ── OVERLAY ── */
+/* ══ FULL-PAGE BOOKING STEPPER ══ */
 #bk-overlay{
   position:fixed;inset:0;z-index:9000;
-  background:rgba(10,5,2,.75);
-  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
-  display:flex;align-items:flex-end;justify-content:center;
-  padding:0;
+  background:#fdf8f0;
+  display:flex;flex-direction:column;
   opacity:0;pointer-events:none;
-  transition:opacity .32s ease;
+  transition:opacity .3s ease;
+  overflow:hidden;
 }
 #bk-overlay.open{opacity:1;pointer-events:all;}
 body.bk-locked{position:fixed;width:100%;overflow:hidden;}
 
-/* ── MODAL — sheet từ dưới lên trên mobile ── */
-.bk-modal{
-  width:100%;max-width:520px;
-  background:#fdf8f0;
-  border-radius:24px 24px 0 0;
-  position:relative;
-  transform:translateY(100%);
-  transition:transform .42s cubic-bezier(.32,1.1,.64,1);
-  max-height:92vh;
-  max-height:calc(var(--vh,1vh)*92);
-  display:flex;flex-direction:column;
+/* ── INNER CONTAINER ── */
+.bk-inner{
+  width:100%;
+  height:100%;
+  height:-webkit-fill-available;
+  display:flex;
+  flex-direction:column;
   overflow:hidden;
-  box-shadow:0 -8px 48px rgba(43,26,14,.18);
-}
-#bk-overlay.open .bk-modal{transform:translateY(0);}
-
-/* drag handle */
-.bk-handle{
-  width:40px;height:4px;border-radius:2px;
-  background:rgba(43,26,14,.15);
-  margin:12px auto 0;flex-shrink:0;
+  background:#fdf8f0;
 }
 
-/* ── HEADER ── */
-.bk-hd{
-  padding:16px 24px 0;
+/* ── TOP NAV BAR ── */
+.bk-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:env(safe-area-inset-top,0px) 20px 0;
+  padding-top:calc(env(safe-area-inset-top,0px) + 14px);
+  padding-bottom:14px;
+  background:#fdf8f0;
+  border-bottom:1px solid rgba(184,133,46,.12);
   flex-shrink:0;
-  text-align:center;
   position:relative;
-  background:#fdf8f0;
 }
-.bk-lotus{font-size:28px;display:block;margin-bottom:6px;line-height:1;}
-.bk-title{
+.bk-back-nav{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(43,26,14,.06);border:none;
+  color:rgba(43,26,14,.55);font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;
+}
+.bk-back-nav:hover{background:rgba(43,26,14,.1);}
+.bk-back-nav:disabled{opacity:0;pointer-events:none;}
+.bk-topbar-title{
   font-family:'Playfair Display',serif;
-  font-size:clamp(22px,5vw,28px);
-  font-weight:400;color:#2B1A0E;
-  line-height:1.2;margin-bottom:5px;
+  font-size:17px;font-weight:400;color:#2B1A0E;
+  position:absolute;left:50%;transform:translateX(-50%);
 }
-.bk-title em{font-style:italic;color:#B8852E;}
-.bk-sub{
-  font-size:12.5px;color:rgba(43,26,14,.5);
-  font-family:'Be Vietnam Pro',sans-serif;font-weight:300;
-  display:flex;align-items:center;justify-content:center;gap:14px;
-  margin-bottom:10px;
-}
-.bk-sub span{display:flex;align-items:center;gap:4px;}
-
-/* urgency badge */
-.bk-urgency{
-  display:inline-flex;align-items:center;gap:6px;
-  background:#fff3e0;
-  border:1px solid rgba(184,133,46,.3);
-  border-radius:20px;
-  padding:5px 14px;
-  font-size:12px;font-weight:500;
-  color:#8B4513;
-  margin-bottom:14px;
-  font-family:'Be Vietnam Pro',sans-serif;
-}
-
-/* close btn */
-.bk-x{
-  position:absolute;top:16px;right:20px;
-  width:32px;height:32px;border-radius:50%;
-  background:rgba(43,26,14,.07);border:none;
-  color:rgba(43,26,14,.5);
+.bk-topbar-title em{color:#B8852E;font-style:italic;}
+.bk-close-nav{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(43,26,14,.06);border:none;
+  color:rgba(43,26,14,.55);font-size:16px;
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;cursor:pointer;transition:all .2s;
-  font-weight:300;
+  cursor:pointer;transition:all .2s;
 }
-.bk-x:hover{background:rgba(43,26,14,.12);color:#2B1A0E;}
+.bk-close-nav:hover{background:rgba(43,26,14,.1);}
 
-/* ── STEP BAR ── */
-.bk-stepbar{
-  display:flex;align-items:center;
-  padding:0 24px 14px;
+/* ── PROGRESS BAR ── */
+.bk-progress-wrap{
+  height:3px;background:rgba(184,133,46,.12);
   flex-shrink:0;
-  background:#fdf8f0;
-  gap:0;
 }
-.bk-si{
-  display:flex;flex-direction:column;align-items:center;
-  gap:4px;flex:1;position:relative;
+.bk-progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,#B8852E,#D4A84E);
+  transition:width .45s cubic-bezier(.4,0,.2,1);
 }
-.bk-si:not(:last-child)::after{
-  content:'';
-  position:absolute;top:14px;
-  left:calc(50% + 18px);right:calc(-50% + 18px);
-  height:2px;
-  background:rgba(184,133,46,.2);
-  transition:background .4s;
-}
-.bk-si.done:not(:last-child)::after{background:#B8852E;}
-.bk-snum{
-  width:28px;height:28px;border-radius:50%;
-  border:2px solid rgba(184,133,46,.25);
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-family:'Be Vietnam Pro',sans-serif;font-weight:500;
-  color:rgba(184,133,46,.4);
-  background:#fff;
-  transition:all .3s;
-  position:relative;z-index:1;
-}
-.bk-slbl{
-  font-size:9.5px;letter-spacing:.5px;
-  color:rgba(43,26,14,.35);
-  font-family:'Be Vietnam Pro',sans-serif;
-  white-space:nowrap;transition:color .3s;
-}
-.bk-si.active .bk-snum{
-  border-color:#B8852E;color:#fff;background:#B8852E;
-  box-shadow:0 0 0 4px rgba(184,133,46,.15);
-}
-.bk-si.active .bk-slbl{color:#B8852E;font-weight:500;}
-.bk-si.done .bk-snum{
-  border-color:#3A5028;background:#3A5028;color:#fff;font-size:13px;
-}
-.bk-si.done .bk-slbl{color:#3A5028;}
 
-/* ── SCROLLABLE BODY ── */
-.bk-body{
-  overflow-y:auto;flex:1;
+/* ── STEP LABELS (1/3 style) ── */
+.bk-steplabel{
+  text-align:center;padding:10px 16px 6px;
+  flex-shrink:0;
+}
+.bk-steplabel-num{
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:10px;letter-spacing:1.5px;
+  color:rgba(43,26,14,.38);font-weight:500;
+  text-transform:uppercase;
+}
+.bk-steplabel-txt{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:400;color:#2B1A0E;
+  line-height:1.2;margin-top:2px;
+}
+.bk-steplabel-txt em{color:#B8852E;font-style:italic;}
+
+/* ── SLIDES CONTAINER ── */
+.bk-slides{
+  flex:1;
+  display:flex;
+  overflow:hidden;
+  position:relative;
+}
+.bk-slide{
+  min-width:100%;
+  height:100%;
+  overflow-y:auto;
   overscroll-behavior:contain;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
+  padding:0 0 20px;
+  flex-shrink:0;
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  display:none;
 }
-.bk-body::-webkit-scrollbar{display:none;}
-
-/* ── PANELS ── */
-.bkp{display:none;}
-.bkp.on{display:block;animation:bkIn .28s ease both;}
-@keyframes bkIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:none;}}
+.bk-slide::-webkit-scrollbar{display:none;}
+.bk-slide.active{
+  display:block;
+  animation:slideIn .32s cubic-bezier(.4,0,.2,1) both;
+}
+.bk-slide.prev{
+  display:block;
+  animation:slideOut .32s cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes slideIn{
+  from{opacity:0;transform:translateX(48px);}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes slideBack{
+  from{opacity:0;transform:translateX(-48px);}
+  to{opacity:1;transform:translateX(0);}
+}
+@keyframes slideOut{
+  from{opacity:1;}
+  to{opacity:0;}
+}
+.bk-slide.going-back.active{animation-name:slideBack;}
 
 /* ── SECTION TITLE ── */
 .bk-sec-title{
   font-family:'Playfair Display',serif;
-  font-size:18px;font-weight:400;
-  color:#2B1A0E;
-  text-align:center;
-  padding:16px 24px 4px;
-  position:relative;
-}
-.bk-sec-title::after{
-  content:'❧';
-  display:block;font-size:14px;
-  color:rgba(184,133,46,.5);margin-top:3px;
+  font-size:15px;font-weight:400;color:rgba(43,26,14,.5);
+  padding:16px 20px 8px;
+  border-bottom:1px solid rgba(184,133,46,.1);
+  margin-bottom:4px;
 }
 
 /* ── SERVICE CARDS ── */
@@ -1683,89 +1660,70 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   display:flex;align-items:center;
   overflow:hidden;
   position:relative;
+  -webkit-tap-highlight-color:transparent;
 }
-.bk-sc:active{transform:scale(.99);}
+.bk-sc:active{transform:scale(.98);}
 .bk-sc.on{
   border-color:#B8852E;
+  background:linear-gradient(135deg,#fffbf3,#fff8ec);
   box-shadow:0 2px 16px rgba(184,133,46,.18);
 }
-/* image col */
 .bk-sc-img{
-  width:90px;height:80px;
-  flex-shrink:0;
-  overflow:hidden;
-  position:relative;
+  width:84px;height:80px;flex-shrink:0;overflow:hidden;position:relative;
 }
 .bk-sc-img-inner{
   width:100%;height:100%;
-  object-fit:cover;
   display:flex;align-items:center;justify-content:center;
-  font-size:28px;
+  font-size:30px;
   background:linear-gradient(135deg,#f5ead0,#ede0c0);
 }
-/* icon overlay */
 .bk-sc-ico{
   position:absolute;bottom:5px;left:5px;
-  width:28px;height:28px;border-radius:50%;
-  background:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;
-  box-shadow:0 1px 6px rgba(0,0,0,.12);
+  width:26px;height:26px;border-radius:50%;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:13px;box-shadow:0 1px 6px rgba(0,0,0,.12);
 }
-/* content col */
-.bk-sc-body{
-  flex:1;padding:10px 10px 10px 12px;min-width:0;
-}
+.bk-sc-body{flex:1;padding:10px 8px 10px 12px;min-width:0;}
 .bk-sc-name{
   font-family:'Playfair Display',serif;
-  font-size:15px;font-weight:500;
-  color:#2B1A0E;margin-bottom:2px;
-  line-height:1.3;
+  font-size:14px;font-weight:500;color:#2B1A0E;
+  margin-bottom:2px;line-height:1.3;
 }
 .bk-sc-desc{
-  font-size:11.5px;color:rgba(43,26,14,.5);
+  font-size:11px;color:rgba(43,26,14,.45);
   line-height:1.4;margin-bottom:5px;
   font-family:'Be Vietnam Pro',sans-serif;font-weight:300;
 }
-/* badge */
 .bk-sc-badge{
   display:inline-flex;align-items:center;gap:4px;
-  font-size:10.5px;font-weight:500;
-  padding:3px 9px;border-radius:10px;
+  font-size:10px;font-weight:500;
+  padding:2px 8px;border-radius:10px;
   font-family:'Be Vietnam Pro',sans-serif;
 }
 .bk-sc-badge.hot{background:#fff3e0;color:#c0450a;}
 .bk-sc-badge.office{background:#f0f4ff;color:#4466cc;}
 .bk-sc-badge.save{background:#f3e8ff;color:#7744aa;}
 .bk-sc-badge.free{background:#e8f5e9;color:#2e7d32;}
-/* price col */
 .bk-sc-price{
-  padding:10px 14px 10px 8px;
+  padding:10px 14px 10px 4px;
   text-align:right;flex-shrink:0;
-  display:flex;flex-direction:column;align-items:flex-end;justify-content:center;
-  gap:2px;
+  display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:2px;
 }
 .bk-sc-dur{
-  font-size:10.5px;color:rgba(43,26,14,.4);
+  font-size:10px;color:rgba(43,26,14,.4);
   font-family:'Be Vietnam Pro',sans-serif;
-  display:flex;align-items:center;gap:3px;
-  white-space:nowrap;
+  display:flex;align-items:center;gap:3px;white-space:nowrap;
 }
-.bk-sc-from{font-size:10px;color:rgba(43,26,14,.4);font-family:'Be Vietnam Pro',sans-serif;}
 .bk-sc-amt{
-  font-size:16px;font-weight:600;
-  color:#B8852E;
-  font-family:'Be Vietnam Pro',sans-serif;
-  white-space:nowrap;
+  font-size:16px;font-weight:600;color:#B8852E;
+  font-family:'Be Vietnam Pro',sans-serif;white-space:nowrap;
 }
 .bk-sc.on .bk-sc-amt{color:#3A5028;}
-/* radio circle */
 .bk-sc-radio{
   width:22px;height:22px;border-radius:50%;
   border:2px solid rgba(184,133,46,.3);
   display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:all .2s;
-  margin-right:4px;
+  flex-shrink:0;transition:all .2s;margin-right:12px;
 }
 .bk-sc-radio::after{
   content:'';width:10px;height:10px;border-radius:50%;
@@ -1774,8 +1732,8 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
 .bk-sc.on .bk-sc-radio{border-color:#B8852E;}
 .bk-sc.on .bk-sc-radio::after{background:#B8852E;}
 
-/* ── FORM (step 2 & 3) ── */
-.bk-form-wrap{padding:8px 20px 4px;}
+/* ── FORM FIELDS ── */
+.bk-form-wrap{padding:4px 16px 4px;}
 .bkf{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
 .bkf label{
   font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
@@ -1787,9 +1745,9 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   background:#fff;
   border:1.5px solid rgba(184,133,46,.22);
   border-radius:12px;
-  padding:13px 16px;
+  padding:14px 16px;
   font-family:'Be Vietnam Pro',sans-serif;
-  font-size:15px;font-weight:400;
+  font-size:16px;font-weight:400;
   color:#2B1A0E;outline:none;
   transition:all .22s;
   appearance:none;-webkit-appearance:none;width:100%;
@@ -1804,16 +1762,14 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
 }
 .bkf select option{background:#fdf8f0;color:#2B1A0E;}
 .bkf input:focus,.bkf select:focus,.bkf textarea:focus{
-  border-color:#3A5028;
-  box-shadow:0 0 0 3px rgba(58,80,40,.08);
+  border-color:#3A5028;box-shadow:0 0 0 3px rgba(58,80,40,.08);
 }
 .bkf input.bke,.bkf select.bke{
-  border-color:#c0450a;
-  box-shadow:0 0 0 3px rgba(192,69,10,.06);
+  border-color:#c0450a;box-shadow:0 0 0 3px rgba(192,69,10,.06);
 }
 .bkf .bkem{font-size:10.5px;color:#c0450a;display:none;padding-left:4px;}
 .bkf .bkem.on{display:block;}
-.bkf textarea{resize:none;height:80px;line-height:1.65;font-size:14px;border-radius:12px;}
+.bkf textarea{resize:none;height:88px;line-height:1.65;font-size:14px;border-radius:12px;}
 .bk2col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
 /* ── TIME SLOTS ── */
@@ -1822,17 +1778,17 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   gap:8px;margin-top:6px;
 }
 .bk-ts{
-  padding:10px 4px;
+  padding:12px 4px;
   border:1.5px solid rgba(184,133,46,.2);
   border-radius:10px;
-  font-size:13px;font-weight:500;
+  font-size:14px;font-weight:500;
   color:rgba(43,26,14,.55);
   cursor:pointer;transition:all .18s;
-  background:#fff;
-  text-align:center;
+  background:#fff;text-align:center;
   font-family:'Be Vietnam Pro',sans-serif;
+  -webkit-tap-highlight-color:transparent;
 }
-.bk-ts:hover{border-color:#3A5028;color:#3A5028;}
+.bk-ts:active{transform:scale(.95);}
 .bk-ts.on{
   background:#3A5028;border-color:#3A5028;
   color:#fff;font-weight:600;
@@ -1841,11 +1797,8 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
 
 /* ── NOTE BOX ── */
 .bk-note{
-  background:#fffbf0;
-  border:1px solid rgba(184,133,46,.2);
-  border-radius:10px;
-  padding:10px 14px;
-  margin:0 20px 14px;
+  background:#fffbf0;border:1px solid rgba(184,133,46,.2);
+  border-radius:10px;padding:10px 14px;margin:0 16px 14px;
 }
 .bk-note p{
   font-size:11.5px;color:rgba(43,26,14,.5);
@@ -1853,15 +1806,33 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
 }
 .bk-note strong{color:#3A5028;font-weight:500;}
 
+/* ── ERRORS ── */
+.bk-svc-em{
+  font-size:11px;color:#c0450a;display:none;
+  padding:0 16px 8px;font-family:'Be Vietnam Pro',sans-serif;
+}
+.bk-svc-em.on{display:block;}
+
+/* ── SUMMARY CARD (step 3 top) ── */
+.bk-summary-card{
+  margin:8px 16px 16px;
+  background:#fff;
+  border:1.5px solid rgba(184,133,46,.2);
+  border-radius:14px;padding:14px 16px;
+}
+.bk-sum-row{
+  display:flex;align-items:flex-start;gap:8px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:12.5px;color:rgba(43,26,14,.55);
+  line-height:1.6;padding:3px 0;
+}
+.bk-sum-row strong{color:#2B1A0E;font-weight:500;min-width:72px;flex-shrink:0;}
+
 /* ── FALLBACK ── */
 #bk-fallback{
   display:none;
-  background:#f0f8ec;
-  border:1.5px solid rgba(58,80,40,.3);
-  border-radius:12px;
-  padding:14px 16px;
-  margin:0 20px 14px;
-  animation:bkIn .3s ease both;
+  background:#f0f8ec;border:1.5px solid rgba(58,80,40,.3);
+  border-radius:12px;padding:14px 16px;margin:0 16px 14px;
 }
 #bk-fallback p{font-size:12px;color:rgba(43,26,14,.65);line-height:1.7;margin-bottom:10px;font-family:'Be Vietnam Pro',sans-serif;}
 #bk-fallback strong{color:#3A5028;}
@@ -1870,179 +1841,159 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   background:#3A5028;color:#fff;
   padding:11px 22px;border-radius:10px;
   font-family:'Be Vietnam Pro',sans-serif;
-  font-size:12px;letter-spacing:.5px;font-weight:500;
-  text-decoration:none;transition:all .22s;
+  font-size:12px;font-weight:500;text-decoration:none;transition:all .22s;
 }
-.bk-fallback-lnk:hover{background:#587040;}
 
-/* ── SVC ERROR ── */
-.bk-svc-em{
-  font-size:11px;color:#c0450a;display:none;
-  padding:0 20px 8px;font-family:'Be Vietnam Pro',sans-serif;
-}
-.bk-svc-em.on{display:block;}
-
-/* ── STICKY FOOTER BUTTONS ── */
-.bk-footer{
+/* ── BOTTOM CTA ── */
+.bk-cta{
   flex-shrink:0;
   background:#fdf8f0;
   border-top:1px solid rgba(184,133,46,.12);
-  padding:12px 20px 20px;
-  padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));
 }
-.bk-trust{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:10px;
+.bk-trust-row{
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
 }
 .bk-trust-icon{font-size:22px;}
 .bk-trust-text{flex:1;}
-.bk-trust-main{font-size:12.5px;font-weight:500;color:#2B1A0E;font-family:'Be Vietnam Pro',sans-serif;}
+.bk-trust-main{font-size:12px;font-weight:500;color:#2B1A0E;font-family:'Be Vietnam Pro',sans-serif;}
 .bk-trust-stars{font-size:11px;color:#B8852E;letter-spacing:1px;}
-.bk-btn-next,.bk-btn-submit{
+.bk-btn-primary{
   width:100%;
   background:linear-gradient(135deg,#C4922A,#B8852E);
-  color:#fff;border:none;
-  border-radius:14px;
-  padding:16px;
+  color:#fff;border:none;border-radius:14px;
+  padding:17px;
   font-family:'Be Vietnam Pro',sans-serif;
   font-size:15px;font-weight:600;letter-spacing:.3px;
   cursor:pointer;transition:all .25s;
   display:flex;align-items:center;justify-content:center;gap:8px;
   box-shadow:0 4px 20px rgba(184,133,46,.35);
+  -webkit-tap-highlight-color:transparent;
 }
-.bk-btn-next:hover,.bk-btn-submit:hover{
-  background:linear-gradient(135deg,#D4A84E,#C4922A);
-  box-shadow:0 6px 24px rgba(184,133,46,.45);
-  transform:translateY(-1px);
-}
-.bk-btn-next:active,.bk-btn-submit:active{transform:scale(.98);}
+.bk-btn-primary:active{transform:scale(.98);opacity:.92;}
 .bk-secure{
   text-align:center;margin-top:7px;
   font-size:10.5px;color:rgba(43,26,14,.35);
   font-family:'Be Vietnam Pro',sans-serif;
   display:flex;align-items:center;justify-content:center;gap:4px;
 }
-/* back row */
-.bk-back-row{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:10px;
-}
-.bk-btn-back{
-  background:transparent;border:1.5px solid rgba(58,80,40,.3);
-  color:rgba(43,26,14,.55);border-radius:12px;
-  padding:14px 20px;
-  font-family:'Be Vietnam Pro',sans-serif;
-  font-size:13px;font-weight:500;letter-spacing:.3px;
-  cursor:pointer;transition:all .2s;flex-shrink:0;
-}
-.bk-btn-back:hover{border-color:#3A5028;color:#3A5028;}
 
-/* ── SUCCESS ── */
-#bk-ok{display:none;text-align:center;padding:24px 24px 8px;}
-.bk-ok-lotus{font-size:52px;display:block;margin-bottom:10px;animation:bkPop .55s cubic-bezier(.34,1.56,.64,1) both;}
+/* ── SUCCESS SCREEN ── */
+#bk-success{
+  display:none;
+  flex:1;
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:40px 24px;
+  overflow-y:auto;
+}
+#bk-success.show{display:flex;}
+.bk-ok-lotus{font-size:60px;display:block;margin-bottom:16px;animation:bkPop .55s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes bkPop{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
-#bk-ok h3{font-family:'Playfair Display',serif;font-size:23px;font-weight:400;color:#2B1A0E;margin-bottom:6px;}
-#bk-ok h3 em{font-style:italic;color:#B8852E;}
-#bk-ok .bk-ok-sum{
+#bk-success h3{
+  font-family:'Playfair Display',serif;
+  font-size:26px;font-weight:400;color:#2B1A0E;margin-bottom:8px;
+}
+#bk-success h3 em{font-style:italic;color:#B8852E;}
+#bk-success .bk-ok-sum{
   background:#fff;border:1.5px solid rgba(184,133,46,.2);
   border-radius:14px;padding:14px 18px;
-  margin:14px 0;text-align:left;
+  margin:16px 0;text-align:left;width:100%;max-width:400px;
 }
-#bk-ok .bk-ok-sum p{
+#bk-success .bk-ok-sum p{
   font-size:13px;color:rgba(43,26,14,.65);
   line-height:1.9;font-family:'Be Vietnam Pro',sans-serif;
 }
-#bk-ok .bk-ok-sum strong{color:#3A5028;font-weight:500;}
-#bk-ok .bk-ok-note{
-  font-size:12px;color:rgba(43,26,14,.45);line-height:1.7;
+#bk-success .bk-ok-sum strong{color:#3A5028;font-weight:500;}
+#bk-success .bk-ok-note{
+  font-size:12.5px;color:rgba(43,26,14,.45);line-height:1.7;
   font-family:'Be Vietnam Pro',sans-serif;font-weight:300;
-  margin-bottom:6px;
+  max-width:360px;
 }
 .bk-new{
-  display:block;margin-top:10px;background:none;border:none;
-  color:rgba(43,26,14,.3);font-size:11px;
+  margin-top:16px;background:none;border:1.5px solid rgba(43,26,14,.15);
+  border-radius:10px;padding:10px 24px;
+  color:rgba(43,26,14,.4);font-size:12px;
   font-family:'Be Vietnam Pro',sans-serif;
-  letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:color .2s;
+  letter-spacing:.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;
 }
-.bk-new:hover{color:rgba(43,26,14,.6);}
+.bk-new:hover{border-color:rgba(43,26,14,.3);color:rgba(43,26,14,.7);}
 
-/* ── DESKTOP: center modal, rounded all sides ── */
-@media(min-width:600px){
-  #bk-overlay{align-items:center;}
-  .bk-modal{
-    border-radius:20px;max-height:88vh;
-    transform:translateY(20px) scale(.97);
-  }
-  #bk-overlay.open .bk-modal{transform:translateY(0) scale(1);}
-  .bk-handle{display:none;}
+/* ── URGENCY PILL ── */
+.bk-urgency-sm{
+  display:inline-flex;align-items:center;gap:5px;
+  background:#fff3e0;border:1px solid rgba(184,133,46,.25);
+  border-radius:20px;padding:4px 12px;
+  font-size:11px;font-weight:500;color:#8B4513;
+  font-family:'Be Vietnam Pro',sans-serif;
+  margin:0 16px 10px;
 }
-@media(max-width:400px){
+
+@media(max-width:380px){
   .bk-ts-wrap{grid-template-columns:repeat(3,1fr);}
   .bk2col{grid-template-columns:1fr;}
+}
+@media(min-width:600px){
+  #bk-overlay{align-items:center;justify-content:center;background:rgba(10,5,2,.6);}
+  .bk-inner{
+    width:100%;max-width:480px;
+    background:#fdf8f0;
+    border-radius:20px;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    max-height:90vh;
+    box-shadow:0 20px 60px rgba(43,26,14,.25);
+    animation:bkPop .35s cubic-bezier(.34,1.2,.64,1) both;
+  }
 }
 </style>
 
 <!-- MODAL HTML -->
 <div id="bk-overlay" onclick="bkOvClick(event)">
-<div class="bk-modal">
-  <div class="bk-handle"></div>
+<div class="bk-inner">
 
-  <!-- HEADER -->
-  <div class="bk-hd">
-    <span class="bk-lotus">🪷</span>
-    <h2 class="bk-title">Đặt lịch <em>thư giãn</em> hôm nay</h2>
-    <div class="bk-sub">
-      <span>⏱ Nhân viên sẽ gọi xác nhận trong 15 phút</span>
-      <span>🕐 Mở cửa: 8:00 – 20:00</span>
-    </div>
-    <div class="bk-urgency">🔥 Còn 5 slot trống hôm nay</div>
-    <button class="bk-x" onclick="bkClose()">✕</button>
+  <!-- TOP NAV -->
+  <div class="bk-topbar">
+    <button class="bk-back-nav" id="bk-back-nav" onclick="bkGoBack()" disabled>←</button>
+    <div class="bk-topbar-title">Mộc Tâm <em>Thang</em></div>
+    <button class="bk-close-nav" onclick="bkClose()">✕</button>
   </div>
 
-  <!-- STEP BAR -->
-  <div class="bk-stepbar" id="bk-steps">
-    <div class="bk-si active" id="bks1">
-      <div class="bk-snum">1</div>
-      <div class="bk-slbl">Chọn dịch vụ</div>
-    </div>
-    <div class="bk-si" id="bks2">
-      <div class="bk-snum">2</div>
-      <div class="bk-slbl">Chọn thời gian</div>
-    </div>
-    <div class="bk-si" id="bks3">
-      <div class="bk-snum">3</div>
-      <div class="bk-slbl">Xác nhận thông tin</div>
-    </div>
+  <!-- PROGRESS BAR -->
+  <div class="bk-progress-wrap">
+    <div class="bk-progress-fill" id="bk-prog" style="width:33.3%"></div>
   </div>
 
-  <!-- SCROLLABLE BODY -->
-  <div class="bk-body">
+  <!-- SLIDES -->
+  <div class="bk-slides" id="bk-slides">
 
-    <!-- ── STEP 1: DỊCH VỤ ── -->
-    <div class="bkp on" id="bkp1">
-      <div class="bk-sec-title">Chọn dịch vụ phù hợp với bạn</div>
+    <!-- ── SLIDE 1: DỊCH VỤ ── -->
+    <div class="bk-slide active" id="bkp1">
+      <div class="bk-steplabel">
+        <div class="bk-steplabel-num">Bước 1 / 3</div>
+        <div class="bk-steplabel-txt">Chọn <em>dịch vụ</em></div>
+      </div>
+      <div class="bk-urgency-sm">🔥 Còn 5 slot trống hôm nay</div>
+
       <div class="bk-svc-list">
 
-        <!-- 1. Massage đông y trị liệu chuyên sâu — 600K (cao nhất) -->
         <div class="bk-sc" data-svc="Massage đông y trị liệu chuyên sâu" onclick="bkSvc(this)">
           <div class="bk-sc-img">
             <div class="bk-sc-img-inner">🌿</div>
             <div class="bk-sc-ico">🎯</div>
           </div>
           <div class="bk-sc-body">
-            <div class="bk-sc-name">Massage Đông y Trị Liệu Chuyên Sâu</div>
+            <div class="bk-sc-name">Massage Đông Y Trị Liệu Chuyên Sâu</div>
             <div class="bk-sc-desc">Intensive Therapeutic Oriental Massage</div>
             <span class="bk-sc-badge hot">⭐ Dịch vụ cao cấp nhất</span>
           </div>
           <div class="bk-sc-price">
             <div class="bk-sc-dur">⏱ 90 phút</div>
-            <div class="bk-sc-from">&nbsp;</div>
             <div class="bk-sc-amt">600K</div>
           </div>
           <div class="bk-sc-radio"></div>
         </div>
 
-        <!-- 2. Massage body dưỡng sinh đông y VIP — 520K -->
         <div class="bk-sc" data-svc="Massage body dưỡng sinh đông y VIP" onclick="bkSvc(this)">
           <div class="bk-sc-img">
             <div class="bk-sc-img-inner">💆</div>
@@ -2055,13 +2006,11 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
           </div>
           <div class="bk-sc-price">
             <div class="bk-sc-dur">⏱ 90 phút</div>
-            <div class="bk-sc-from">&nbsp;</div>
             <div class="bk-sc-amt">520K</div>
           </div>
           <div class="bk-sc-radio"></div>
         </div>
 
-        <!-- 3. Điều trị thâm nám liệu trình — 1.500K -->
         <div class="bk-sc" data-svc="Điều trị thâm nám liệu trình" onclick="bkSvc(this)">
           <div class="bk-sc-img">
             <div class="bk-sc-img-inner">✨</div>
@@ -2074,13 +2023,11 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
           </div>
           <div class="bk-sc-price">
             <div class="bk-sc-dur">⏱ Liệu trình</div>
-            <div class="bk-sc-from">&nbsp;</div>
             <div class="bk-sc-amt">1.500K</div>
           </div>
           <div class="bk-sc-radio"></div>
         </div>
 
-        <!-- 4. Massage body đông y thông kinh hoạt lạc — 369K -->
         <div class="bk-sc" data-svc="Massage body đông y thông kinh hoạt lạc" onclick="bkSvc(this)">
           <div class="bk-sc-img">
             <div class="bk-sc-img-inner">🌸</div>
@@ -2093,13 +2040,11 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
           </div>
           <div class="bk-sc-price">
             <div class="bk-sc-dur">⏱ 75 phút</div>
-            <div class="bk-sc-from">&nbsp;</div>
             <div class="bk-sc-amt">369K</div>
           </div>
           <div class="bk-sc-radio"></div>
         </div>
 
-        <!-- 5. Chăm sóc dưỡng da toàn thân — 350K -->
         <div class="bk-sc" data-svc="Chăm sóc dưỡng da toàn thân" onclick="bkSvc(this)">
           <div class="bk-sc-img">
             <div class="bk-sc-img-inner">🧴</div>
@@ -2107,18 +2052,16 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
           </div>
           <div class="bk-sc-body">
             <div class="bk-sc-name">Chăm Sóc Dưỡng Da Toàn Thân</div>
-            <div class="bk-sc-desc">Dưỡng da body, làm mềm mịn từ thảo mộc tự nhiên</div>
+            <div class="bk-sc-desc">Dưỡng da body từ thảo mộc tự nhiên 100%</div>
             <span class="bk-sc-badge save">🌿 Thảo mộc 100%</span>
           </div>
           <div class="bk-sc-price">
             <div class="bk-sc-dur">⏱ 60 phút</div>
-            <div class="bk-sc-from">&nbsp;</div>
             <div class="bk-sc-amt">350K</div>
           </div>
           <div class="bk-sc-radio"></div>
         </div>
 
-        <!-- 6. Gội đầu não an thần — 249K -->
         <div class="bk-sc" data-svc="Gội đầu não an thần — Brain Sedator" onclick="bkSvc(this)">
           <div class="bk-sc-img">
             <div class="bk-sc-img-inner">🧠</div>
@@ -2131,14 +2074,13 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
           </div>
           <div class="bk-sc-price">
             <div class="bk-sc-dur">⏱ 60 phút</div>
-            <div class="bk-sc-from">&nbsp;</div>
             <div class="bk-sc-amt">249K</div>
           </div>
           <div class="bk-sc-radio"></div>
         </div>
 
       </div>
-      <div class="bk-svc-em" id="bk-svc-em">Vui lòng chọn ít nhất 1 dịch vụ</div>
+      <div class="bk-svc-em" id="bk-svc-em">⚠ Vui lòng chọn ít nhất 1 dịch vụ</div>
 
       <div class="bk-form-wrap">
         <div class="bkf">
@@ -2153,9 +2095,12 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
       </div>
     </div>
 
-    <!-- ── STEP 2: THỜI GIAN ── -->
-    <div class="bkp" id="bkp2">
-      <div class="bk-sec-title">Chọn thời gian</div>
+    <!-- ── SLIDE 2: THỜI GIAN ── -->
+    <div class="bk-slide" id="bkp2">
+      <div class="bk-steplabel">
+        <div class="bk-steplabel-num">Bước 2 / 3</div>
+        <div class="bk-steplabel-txt">Chọn <em>thời gian</em></div>
+      </div>
       <div class="bk-form-wrap">
         <div class="bk2col">
           <div class="bkf">
@@ -2169,7 +2114,7 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
               <option value="1 người">1 người</option>
               <option value="2 người">2 người</option>
               <option value="3 người">3 người</option>
-              <option value="4 người trở lên">4 người trở lên</option>
+              <option value="4 người trở lên">4+ người</option>
             </select>
           </div>
         </div>
@@ -2192,13 +2137,20 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
         </div>
       </div>
       <div class="bk-note">
-        <p>Nếu khung giờ đã kín, nhân viên sẽ gọi để sắp xếp <strong>giờ phù hợp nhất</strong>.</p>
+        <p>Nếu khung giờ đã kín, nhân viên sẽ gọi để sắp xếp <strong>giờ phù hợp nhất</strong> cho bạn.</p>
       </div>
     </div>
 
-    <!-- ── STEP 3: THÔNG TIN ── -->
-    <div class="bkp" id="bkp3">
-      <div class="bk-sec-title">Xác nhận thông tin</div>
+    <!-- ── SLIDE 3: THÔNG TIN ── -->
+    <div class="bk-slide" id="bkp3">
+      <div class="bk-steplabel">
+        <div class="bk-steplabel-num">Bước 3 / 3</div>
+        <div class="bk-steplabel-txt">Xác nhận <em>thông tin</em></div>
+      </div>
+
+      <!-- Summary recap -->
+      <div class="bk-summary-card" id="bk-summary-card"></div>
+
       <div class="bk-form-wrap">
         <div class="bk2col">
           <div class="bkf">
@@ -2224,39 +2176,35 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
       </div>
 
       <div class="bk-note">
-        <p>Sau khi nhấn <strong>"Tiếp tục đặt lịch"</strong>, ứng dụng Tin nhắn sẽ mở với nội dung soạn sẵn — chỉ cần nhấn <strong>Gửi</strong> là xong.</p>
+        <p>Sau khi nhấn <strong>"Gửi đặt lịch"</strong>, ứng dụng Tin nhắn sẽ mở với nội dung soạn sẵn — chỉ cần nhấn <strong>Gửi</strong> là xong.</p>
       </div>
     </div>
 
-    <!-- ── SUCCESS ── -->
-    <div id="bk-ok">
-      <span class="bk-ok-lotus">🌿</span>
-      <h3>Đặt lịch <em>thành công!</em></h3>
-      <div class="bk-ok-sum" id="bk-ok-sum"></div>
-      <p class="bk-ok-note">Nhân viên sẽ gọi xác nhận trong 15 phút. Hẹn gặp bạn tại spa 🍃</p>
-      <button class="bk-new" onclick="bkReset()">↺ Đặt lịch mới</button>
-    </div>
+  </div><!-- /bk-slides -->
 
-  </div><!-- /bk-body -->
+  <!-- SUCCESS (replaces slides area) -->
+  <div id="bk-success">
+    <span class="bk-ok-lotus">🌿</span>
+    <h3>Đặt lịch <em>thành công!</em></h3>
+    <div class="bk-ok-sum" id="bk-ok-sum"></div>
+    <p class="bk-ok-note">Nhân viên sẽ gọi xác nhận trong 15 phút. Hẹn gặp bạn tại spa 🍃</p>
+    <button class="bk-new" onclick="bkReset()">↺ Đặt lịch mới</button>
+  </div>
 
-  <!-- STICKY FOOTER -->
-  <div class="bk-footer" id="bk-footer">
-    <div class="bk-trust" id="bk-trust">
+  <!-- BOTTOM CTA -->
+  <div class="bk-cta" id="bk-cta">
+    <div class="bk-trust-row" id="bk-trust-row">
       <div class="bk-trust-icon">👥</div>
       <div class="bk-trust-text">
         <div class="bk-trust-main">2.000+ khách hàng tin tưởng</div>
         <div class="bk-trust-stars">★★★★½ 4.9/5</div>
       </div>
     </div>
-    <div class="bk-back-row" id="bk-back-row" style="display:none;">
-      <button class="bk-btn-back" onclick="bkGo(window._bkStep-1)">← Quay lại</button>
-      <button class="bk-btn-submit" id="bk-submit-btn" onclick="bkSubmit()" style="flex:1;">✉️ &nbsp; Gửi đặt lịch</button>
-    </div>
-    <button class="bk-btn-next" id="bk-btn-next" onclick="bkNext()">Tiếp tục đặt lịch →</button>
+    <button class="bk-btn-primary" id="bk-btn-primary" onclick="bkNext()">Tiếp tục →</button>
     <div class="bk-secure">🔒 Thông tin của bạn được bảo mật tuyệt đối</div>
   </div>
 
-</div><!-- /bk-modal -->
+</div><!-- /bk-inner -->
 </div><!-- /bk-overlay -->
 
 <script>
@@ -2264,11 +2212,21 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   var ZALO='0987500300';
   var S={svcs:[],branch:'',date:'',time:'',guests:'1 người',name:'',phone:'',note:''};
   window._bkStep=1;
-  var zaloURL='';
+  var goingBack=false;
 
-  /* iOS vh */
-  function setVh(){document.documentElement.style.setProperty('--vh',window.innerHeight*.01+'px');}
-  setVh();window.addEventListener('resize',setVh);
+  /* Desktop: bk-inner needs full height */
+  function styleInner(){
+    var inner=document.querySelector('.bk-inner');
+    if(!inner)return;
+    if(window.innerWidth>=600){
+      inner.style.height='min(90vh,700px)';
+    } else {
+      inner.style.height='100%';
+      inner.style.height='-webkit-fill-available';
+    }
+  }
+  styleInner();
+  window.addEventListener('resize',styleInner);
 
   /* Open / Close */
   window.bkOpen=function(){
@@ -2278,7 +2236,7 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     document.body.style.top='-'+st+'px';
     document.body.dataset.bkScroll=st;
     var fab=document.getElementById('spa-chat-fab');
-    if(fab)fab.style.cssText='visibility:hidden;opacity:0;pointer-events:none;transition:opacity .2s';
+    if(fab)fab.style.cssText='visibility:hidden;opacity:0;pointer-events:none;';
   };
   window.bkClose=function(){
     document.getElementById('bk-overlay').classList.remove('open');
@@ -2289,7 +2247,10 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     var fab=document.getElementById('spa-chat-fab');
     if(fab)fab.style.cssText='visibility:visible;opacity:1;pointer-events:all;transition:opacity .3s';
   };
-  window.bkOvClick=function(e){if(e.target===document.getElementById('bk-overlay'))bkClose();};
+  window.bkOvClick=function(e){
+    /* Only close on desktop overlay backdrop */
+    if(window.innerWidth>=600 && e.target===document.getElementById('bk-overlay'))bkClose();
+  };
   document.addEventListener('keydown',function(e){if(e.key==='Escape')bkClose();});
 
   /* Date min = tomorrow */
@@ -2299,32 +2260,40 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     el.min=t.toISOString().split('T')[0];
   })();
 
-  /* Update footer UI per step */
-  function updateFooter(step){
-    var trust=document.getElementById('bk-trust');
-    var backRow=document.getElementById('bk-back-row');
-    var nextBtn=document.getElementById('bk-btn-next');
-    var submitBtn=document.getElementById('bk-submit-btn');
+  /* Progress bar */
+  function setProgress(step){
+    document.getElementById('bk-prog').style.width=(step/3*100)+'%';
+  }
+
+  /* Update CTA per step */
+  function updateCta(step){
+    var btn=document.getElementById('bk-btn-primary');
+    var trust=document.getElementById('bk-trust-row');
     if(step===1){
       trust.style.display='flex';
-      backRow.style.display='none';
-      nextBtn.style.display='flex';
-      nextBtn.textContent='Tiếp tục đặt lịch →';
+      btn.textContent='Tiếp tục chọn thời gian →';
     } else if(step===2){
       trust.style.display='none';
-      backRow.style.display='flex';
-      nextBtn.style.display='none';
-      submitBtn.style.display='none';
-      /* reuse back-row for next */
-      backRow.innerHTML='<button class="bk-btn-back" onclick="bkGo(1)">← Quay lại</button>'+
-        '<button class="bk-btn-next" onclick="bkNext()" style="flex:1;border-radius:12px;">Tiếp tục →</button>';
+      btn.textContent='Tiếp tục xác nhận →';
     } else if(step===3){
       trust.style.display='none';
-      backRow.style.display='flex';
-      nextBtn.style.display='none';
-      backRow.innerHTML='<button class="bk-btn-back" onclick="bkGo(2)">← Quay lại</button>'+
-        '<button class="bk-btn-submit" id="bk-submit-btn" onclick="bkSubmit()" style="flex:1;">✉️ Gửi đặt lịch</button>';
+      btn.textContent='✉️  Gửi đặt lịch';
     }
+    /* Back button */
+    var back=document.getElementById('bk-back-nav');
+    back.disabled=(step===1);
+  }
+
+  /* Build summary recap for step 3 */
+  function buildSummary(){
+    var fmt='';
+    try{fmt=new Date(S.date+'T00:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});}catch(e){fmt=S.date;}
+    var card=document.getElementById('bk-summary-card');
+    card.innerHTML=
+      '<div class="bk-sum-row"><strong>Dịch vụ</strong><span>'+S.svcs.join(', ')+'</span></div>'+
+      '<div class="bk-sum-row"><strong>Cơ sở</strong><span>'+S.branch+'</span></div>'+
+      '<div class="bk-sum-row"><strong>Ngày hẹn</strong><span>'+fmt+' · '+S.time+'</span></div>'+
+      '<div class="bk-sum-row"><strong>Số người</strong><span>'+S.guests+'</span></div>';
   }
 
   /* Service toggle */
@@ -2374,34 +2343,45 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   }
 
   /* Go to step */
-  window.bkGo=function(next){
+  function goStep(next,back){
     var cur=window._bkStep;
-    document.getElementById('bkp'+cur).classList.remove('on');
-    var cs=document.getElementById('bks'+cur);
-    cs.classList.remove('active');
-    if(next>cur)cs.classList.add('done');else cs.classList.remove('done');
+    var curPanel=document.getElementById('bkp'+cur);
+    var nextPanel=document.getElementById('bkp'+next);
+    if(!nextPanel)return;
+    goingBack=!!back;
+    if(goingBack){nextPanel.classList.add('going-back');}else{nextPanel.classList.remove('going-back');}
+    curPanel.classList.remove('active');
+    curPanel.classList.add('prev');
+    setTimeout(function(){curPanel.classList.remove('prev');},350);
+    nextPanel.classList.add('active');
     window._bkStep=next;
-    var panel=document.getElementById('bkp'+next);
-    panel.classList.add('on');
-    panel.style.animation='none';
-    requestAnimationFrame(function(){panel.style.animation='';});
-    var ns=document.getElementById('bks'+next);
-    if(ns){ns.classList.remove('done');ns.classList.add('active');}
-    updateFooter(next);
-    document.querySelector('.bk-body').scrollTop=0;
+    setProgress(next);
+    updateCta(next);
+    nextPanel.scrollTop=0;
+    if(next===3)buildSummary();
+  }
+
+  window.bkGoBack=function(){
+    if(window._bkStep>1)goStep(window._bkStep-1,true);
   };
 
-  /* Next button */
+  /* Next / submit */
   window.bkNext=function(){
     var cur=window._bkStep;
-    if(!val(cur))return;
-    bkGo(cur+1);
+    if(cur<3){
+      if(!val(cur))return;
+      goStep(cur+1,false);
+    } else {
+      if(!val(3))return;
+      bkSubmit();
+    }
   };
 
-  /* Build SMS message */
+  /* Build SMS */
   function buildMsg(){
     var code='MTT-'+Math.random().toString(36).slice(2,6).toUpperCase();
-    var fmt=new Date(S.date+'T00:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    var fmt='';
+    try{fmt=new Date(S.date+'T00:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){fmt=S.date;}
     return [
       'DAT LICH MOC TAM THANG',
       'Ma: #'+code,
@@ -2422,18 +2402,14 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     return 'sms:'+ZALO+(isIos?'&':'?')+'body='+encodeURIComponent(msg);
   }
 
-  /* Submit */
   window.bkSubmit=function(){
-    if(!val(3))return;
     var msg=buildMsg();
     var smsUrl=buildSmsUrl(msg);
-    zaloURL=smsUrl;
     document.getElementById('bk-fallback-lnk').href=smsUrl;
     try{
       window.location.href=smsUrl;
       setTimeout(function(){
         document.getElementById('bk-fallback').style.display='block';
-        document.querySelector('.bk-body').scrollTop=0;
       },1500);
       setTimeout(function(){showSuccess(msg);},800);
     }catch(e){
@@ -2442,7 +2418,8 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   };
 
   function showSuccess(msg){
-    var fmt=new Date(S.date+'T00:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    var fmt='';
+    try{fmt=new Date(S.date+'T00:00:00').toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){fmt=S.date;}
     document.getElementById('bk-ok-sum').innerHTML=
       '<p>'+
       '<strong>Dịch vụ:</strong> '+S.svcs.join(', ')+'<br>'+
@@ -2450,16 +2427,15 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
       '<strong>Ngày:</strong> '+fmt+' · <strong>Giờ:</strong> '+S.time+'<br>'+
       '<strong>Tên:</strong> '+S.name+' · <strong>SĐT:</strong> '+S.phone+
       '</p>';
-    document.getElementById('bkp3').classList.remove('on');
-    document.getElementById('bk-steps').style.visibility='hidden';
-    document.getElementById('bk-footer').style.display='none';
-    document.getElementById('bk-ok').style.display='block';
+    document.getElementById('bk-slides').style.display='none';
+    document.getElementById('bk-success').classList.add('show');
+    document.getElementById('bk-cta').style.display='none';
   }
 
-  /* Reset — Object.assign để tránh bug closure */
+  /* Reset */
   window.bkReset=function(){
     Object.assign(S,{svcs:[],branch:'',date:'',time:'',guests:'1 người',name:'',phone:'',note:''});
-    window._bkStep=1;zaloURL='';
+    window._bkStep=1;goingBack=false;
     document.querySelectorAll('.bk-sc').forEach(function(c){c.classList.remove('on');});
     document.querySelectorAll('.bk-ts').forEach(function(t){t.classList.remove('on');});
     ['bk-branch','bk-date','bk-name','bk-phone','bk-notetxt'].forEach(function(id){
@@ -2467,22 +2443,22 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     });
     document.getElementById('bk-guests').value='1 người';
     document.getElementById('bk-fallback').style.display='none';
-    document.getElementById('bk-ok').style.display='none';
-    document.getElementById('bk-steps').style.visibility='';
-    document.getElementById('bk-footer').style.display='';
+    document.getElementById('bk-success').classList.remove('show');
+    document.getElementById('bk-slides').style.display='';
+    document.getElementById('bk-cta').style.display='';
     for(var i=1;i<=3;i++){
-      var p=document.getElementById('bkp'+i),s=document.getElementById('bks'+i);
-      if(p)p.classList.remove('on');
-      if(s)s.classList.remove('active','done');
+      var p=document.getElementById('bkp'+i);
+      if(p){p.classList.remove('active','prev','going-back');}
     }
-    document.getElementById('bkp1').classList.add('on');
-    document.getElementById('bks1').classList.add('active');
-    updateFooter(1);
-    document.querySelector('.bk-body').scrollTop=0;
+    /* re-activate step 1 */
+    document.getElementById('bkp1').classList.add('active');
+    setProgress(1);
+    updateCta(1);
   };
 
-  /* Init footer */
-  updateFooter(1);
+  /* Init */
+  setProgress(1);
+  updateCta(1);
 })();
 </script>
 
