@@ -1929,6 +1929,104 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   margin:0 16px 10px;
 }
 
+/* ── ACCORDION GROUPS ── */
+.bk-acc-wrap{padding:4px 16px 4px;}
+.bk-acc-group{
+  margin-bottom:8px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1.5px solid rgba(184,133,46,.18);
+  background:#fff;
+}
+.bk-acc-group.has-sel{
+  border-color:#B8852E;
+}
+.bk-acc-hd{
+  width:100%;display:flex;align-items:center;gap:10px;
+  padding:14px 16px;
+  background:#fff;border:none;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .18s;
+}
+.bk-acc-hd:active{background:#fffbf2;}
+.bk-acc-group.open .bk-acc-hd{background:linear-gradient(135deg,#fffbf3,#fff6e6);}
+.bk-acc-ico{font-size:20px;flex-shrink:0;}
+.bk-acc-label{
+  flex:1;text-align:left;
+  font-family:'Playfair Display',serif;
+  font-size:15px;font-weight:500;color:#2B1A0E;
+}
+.bk-acc-count{
+  font-size:10px;font-weight:600;
+  background:#B8852E;color:#fff;
+  border-radius:10px;padding:2px 7px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  display:none;
+}
+.bk-acc-count.show{display:inline;}
+.bk-acc-arrow{
+  font-size:20px;color:rgba(43,26,14,.3);
+  transition:transform .25s;flex-shrink:0;
+  line-height:1;
+}
+.bk-acc-group.open .bk-acc-arrow{transform:rotate(90deg);color:#B8852E;}
+
+/* SERVICE ROWS inside accordion */
+.bk-acc-body{
+  border-top:1px solid rgba(184,133,46,.12);
+  background:#fdf8f0;
+}
+.bk-svc-row{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;
+  cursor:pointer;
+  transition:background .15s;
+  border-bottom:1px solid rgba(184,133,46,.08);
+  -webkit-tap-highlight-color:transparent;
+}
+.bk-svc-row:last-child{border-bottom:none;}
+.bk-svc-row:active{background:rgba(184,133,46,.08);}
+.bk-svc-row.on{background:rgba(58,80,40,.06);}
+.bk-svc-info{flex:1;min-width:0;}
+.bk-svc-name{
+  display:block;
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:13px;font-weight:400;color:#2B1A0E;
+  line-height:1.4;
+}
+.bk-svc-row.on .bk-svc-name{color:#3A5028;font-weight:500;}
+.bk-svc-dur{
+  display:inline-block;margin-top:2px;
+  font-size:10px;color:rgba(43,26,14,.4);
+  font-family:'Be Vietnam Pro',sans-serif;
+}
+.bk-svc-tag{
+  display:inline-block;margin-top:2px;
+  font-size:10px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  color:#c0450a;font-weight:500;
+}
+.bk-svc-hot .bk-svc-name{font-weight:500;}
+.bk-svc-p{
+  font-size:13px;font-weight:600;
+  color:#B8852E;
+  font-family:'Be Vietnam Pro',sans-serif;
+  white-space:nowrap;flex-shrink:0;
+}
+.bk-svc-row.on .bk-svc-p{color:#3A5028;}
+.bk-svc-chk{
+  width:20px;height:20px;border-radius:50%;
+  border:1.5px solid rgba(184,133,46,.3);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:all .18s;font-size:11px;color:transparent;
+}
+.bk-svc-row.on .bk-svc-chk{
+  background:#3A5028;border-color:#3A5028;
+  color:#fff;content:'✓';
+}
+.bk-svc-row.on .bk-svc-chk::after{content:'✓';}
+
 @media(max-width:380px){
   .bk-ts-wrap{grid-template-columns:repeat(3,1fr);}
   .bk2col{grid-template-columns:1fr;}
@@ -1975,111 +2073,202 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
       </div>
       <div class="bk-urgency-sm">🔥 Còn 5 slot trống hôm nay</div>
 
-      <div class="bk-svc-list">
+      <!-- ACCORDION SERVICE GROUPS -->
+      <div class="bk-acc-wrap" id="bk-acc-wrap">
 
-        <div class="bk-sc" data-svc="Massage đông y trị liệu chuyên sâu" onclick="bkSvc(this)">
-          <div class="bk-sc-img">
-            <div class="bk-sc-img-inner">🌿</div>
-            <div class="bk-sc-ico">🎯</div>
+        <!-- GROUP 1: TOÀN THÂN & CHĂM SÓC -->
+        <div class="bk-acc-group" id="bk-grp-body">
+          <button class="bk-acc-hd" onclick="bkAccToggle('body')">
+            <span class="bk-acc-ico">💆</span>
+            <span class="bk-acc-label">Toàn Thân &amp; Chăm Sóc</span>
+            <span class="bk-acc-count" id="bk-cnt-body"></span>
+            <span class="bk-acc-arrow" id="bk-arr-body">›</span>
+          </button>
+          <div class="bk-acc-body" id="bk-acc-body" style="display:none">
+            <div class="bk-svc-row" data-svc="Chăm sóc dưỡng da toàn thân" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Chăm sóc dưỡng da toàn thân</span><span class="bk-svc-dur">60 phút</span></div>
+              <span class="bk-svc-p">350K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Tắm, hấp, ủ tráng đông y" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Tắm, hấp, ủ tráng đông y</span></div>
+              <span class="bk-svc-p">280K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Tẩy da chết body thảo mộc, cà phê" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Tẩy da chết body thảo mộc, cà phê</span></div>
+              <span class="bk-svc-p">239K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Chăm sóc da viêm nang lông body" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Chăm sóc da viêm nang lông body</span></div>
+              <span class="bk-svc-p">269K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Chà gót chân" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Chà gót chân</span></div>
+              <span class="bk-svc-p">69K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Ngâm chân thuốc bắc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Ngâm chân thuốc bắc</span></div>
+              <span class="bk-svc-p">49K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Massage chân thảo mộc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage chân thảo mộc</span></div>
+              <span class="bk-svc-p">129K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Massage chân cao cấp" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage chân cao cấp</span></div>
+              <span class="bk-svc-p">199K</span><span class="bk-svc-chk"></span>
+            </div>
           </div>
-          <div class="bk-sc-body">
-            <div class="bk-sc-name">Massage Đông Y Trị Liệu Chuyên Sâu</div>
-            <div class="bk-sc-desc">Intensive Therapeutic Oriental Massage</div>
-            <span class="bk-sc-badge hot">⭐ Dịch vụ cao cấp nhất</span>
-          </div>
-          <div class="bk-sc-price">
-            <div class="bk-sc-dur">⏱ 90 phút</div>
-            <div class="bk-sc-amt">600K</div>
-          </div>
-          <div class="bk-sc-radio"></div>
         </div>
 
-        <div class="bk-sc" data-svc="Massage body dưỡng sinh đông y VIP" onclick="bkSvc(this)">
-          <div class="bk-sc-img">
-            <div class="bk-sc-img-inner">💆</div>
-            <div class="bk-sc-ico">👑</div>
+        <!-- GROUP 2: MASSAGE TRỊ LIỆU -->
+        <div class="bk-acc-group" id="bk-grp-massage">
+          <button class="bk-acc-hd" onclick="bkAccToggle('massage')">
+            <span class="bk-acc-ico">🌿</span>
+            <span class="bk-acc-label">Massage Trị Liệu</span>
+            <span class="bk-acc-count" id="bk-cnt-massage"></span>
+            <span class="bk-acc-arrow" id="bk-arr-massage">›</span>
+          </button>
+          <div class="bk-acc-body" id="bk-acc-massage" style="display:none">
+            <div class="bk-svc-row bk-svc-hot" data-svc="Massage body dưỡng sinh đông y VIP" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage body dưỡng sinh đông y VIP</span><span class="bk-svc-tag">💎 VIP · 90 phút</span></div>
+              <span class="bk-svc-p">520K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row bk-svc-hot" data-svc="Massage đông y trị liệu chuyên sâu" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage đông y trị liệu chuyên sâu</span><span class="bk-svc-tag">⭐ Cao cấp nhất · 90 phút</span></div>
+              <span class="bk-svc-p">600K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Massage lưng vai cổ gáy" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage lưng vai cổ gáy</span></div>
+              <span class="bk-svc-p">200K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Massage body đông y thông kinh hoạt lạc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage body đông y thông kinh hoạt lạc</span><span class="bk-svc-dur">75 phút</span></div>
+              <span class="bk-svc-p">369K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Massage body tinh dầu thảo mộc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage body tinh dầu thảo mộc</span></div>
+              <span class="bk-svc-p">269K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Bấm huyệt / giác hơi" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Bấm huyệt / giác hơi</span></div>
+              <span class="bk-svc-p">149K–199K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Đánh gió / cạo gió" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Đánh gió / cạo gió</span></div>
+              <span class="bk-svc-p">149K–199K</span><span class="bk-svc-chk"></span>
+            </div>
           </div>
-          <div class="bk-sc-body">
-            <div class="bk-sc-name">Massage Body Dưỡng Sinh Đông Y VIP</div>
-            <div class="bk-sc-desc">VIP Oriental Nourishing Body Massage</div>
-            <span class="bk-sc-badge save">💎 Gói VIP</span>
-          </div>
-          <div class="bk-sc-price">
-            <div class="bk-sc-dur">⏱ 90 phút</div>
-            <div class="bk-sc-amt">520K</div>
-          </div>
-          <div class="bk-sc-radio"></div>
         </div>
 
-        <div class="bk-sc" data-svc="Điều trị thâm nám liệu trình" onclick="bkSvc(this)">
-          <div class="bk-sc-img">
-            <div class="bk-sc-img-inner">✨</div>
-            <div class="bk-sc-ico">💫</div>
+        <!-- GROUP 3: CHĂM SÓC DA MẶT -->
+        <div class="bk-acc-group" id="bk-grp-face">
+          <button class="bk-acc-hd" onclick="bkAccToggle('face')">
+            <span class="bk-acc-ico">✨</span>
+            <span class="bk-acc-label">Chăm Sóc Da Mặt</span>
+            <span class="bk-acc-count" id="bk-cnt-face"></span>
+            <span class="bk-acc-arrow" id="bk-arr-face">›</span>
+          </button>
+          <div class="bk-acc-body" id="bk-acc-face" style="display:none">
+            <div class="bk-svc-row bk-svc-hot" data-svc="Điều trị thâm nám liệu trình" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Điều trị thâm nám liệu trình</span><span class="bk-svc-tag">🔥 Đặc trị</span></div>
+              <span class="bk-svc-p">1.500K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Tẩy da chết, rửa mặt và massage mặt" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Tẩy da chết, rửa mặt và massage mặt</span></div>
+              <span class="bk-svc-p">50K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Đắp mặt nạ thuốc bắc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Đắp mặt nạ thuốc bắc</span></div>
+              <span class="bk-svc-p">49K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Đắp mặt nạ dưỡng ẩm" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Đắp mặt nạ dưỡng ẩm</span></div>
+              <span class="bk-svc-p">79K–119K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Đắp mặt nạ tái sinh collagen" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Đắp mặt nạ tái sinh collagen</span></div>
+              <span class="bk-svc-p">129K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Massage mặt thảo mộc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage mặt thảo mộc</span></div>
+              <span class="bk-svc-p">69K–99K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Massage mặt serum collagen" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage mặt serum collagen</span></div>
+              <span class="bk-svc-p">129K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Massage DHA cá hồi" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Massage DHA cá hồi</span></div>
+              <span class="bk-svc-p">129K–169K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Lấy nhân mụn" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Lấy nhân mụn</span></div>
+              <span class="bk-svc-p">99K–199K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Cấy tảo chống lão hóa" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Cấy tảo chống lão hóa</span></div>
+              <span class="bk-svc-p">250K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Cấy tế bào gốc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Cấy tế bào gốc</span></div>
+              <span class="bk-svc-p">300K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Cấy tảo xoắn" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Cấy tảo xoắn</span></div>
+              <span class="bk-svc-p">249K</span><span class="bk-svc-chk"></span>
+            </div>
           </div>
-          <div class="bk-sc-body">
-            <div class="bk-sc-name">Điều Trị Thâm Nám Liệu Trình</div>
-            <div class="bk-sc-desc">Đặc trị thâm nám chuyên sâu, phục hồi da</div>
-            <span class="bk-sc-badge hot">🔥 Đặc trị</span>
-          </div>
-          <div class="bk-sc-price">
-            <div class="bk-sc-dur">⏱ Liệu trình</div>
-            <div class="bk-sc-amt">1.500K</div>
-          </div>
-          <div class="bk-sc-radio"></div>
         </div>
 
-        <div class="bk-sc" data-svc="Massage body đông y thông kinh hoạt lạc" onclick="bkSvc(this)">
-          <div class="bk-sc-img">
-            <div class="bk-sc-img-inner">🌸</div>
-            <div class="bk-sc-ico">🍃</div>
+        <!-- GROUP 4: GỘI ĐẦU & TÓC -->
+        <div class="bk-acc-group" id="bk-grp-hair">
+          <button class="bk-acc-hd" onclick="bkAccToggle('hair')">
+            <span class="bk-acc-ico">🌸</span>
+            <span class="bk-acc-label">Gội Đầu &amp; Tóc</span>
+            <span class="bk-acc-count" id="bk-cnt-hair"></span>
+            <span class="bk-acc-arrow" id="bk-arr-hair">›</span>
+          </button>
+          <div class="bk-acc-body" id="bk-acc-hair" style="display:none">
+            <div class="bk-svc-row bk-svc-hot" data-svc="Gội đầu não an thần — Brain Sedator" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Gội đầu não an thần — Brain Sedator</span><span class="bk-svc-tag">🔥 Đặc trị</span></div>
+              <span class="bk-svc-p">249K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Gội đầu thảo mộc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Gội đầu thảo mộc</span></div>
+              <span class="bk-svc-p">69K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Gội collagen" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Gội collagen</span></div>
+              <span class="bk-svc-p">79K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Gội collagen phục hồi hư tổn" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Gội collagen phục hồi hư tổn</span></div>
+              <span class="bk-svc-p">149K–199K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Gội tái sinh mọc tóc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Gội tái sinh mọc tóc</span></div>
+              <span class="bk-svc-p">149K–199K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Hấp thảo mộc" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Hấp thảo mộc</span></div>
+              <span class="bk-svc-p">149K–199K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Gội đầu thảo dược Mộc Tâm Thang" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Gội đầu thảo dược Mộc Tâm Thang</span></div>
+              <span class="bk-svc-p">99K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Gội đầu dưỡng sinh truyền thống" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Gội đầu dưỡng sinh truyền thống</span></div>
+              <span class="bk-svc-p">149K</span><span class="bk-svc-chk"></span>
+            </div>
+            <div class="bk-svc-row" data-svc="Gội đầu dưỡng sinh chuyên sâu" onclick="bkToggleSvc(this)">
+              <div class="bk-svc-info"><span class="bk-svc-name">Gội đầu dưỡng sinh chuyên sâu</span></div>
+              <span class="bk-svc-p">199K</span><span class="bk-svc-chk"></span>
+            </div>
           </div>
-          <div class="bk-sc-body">
-            <div class="bk-sc-name">Massage Body Đông Y Thông Kinh Hoạt Lạc</div>
-            <div class="bk-sc-desc">Full-body Oriental Medicine Massage</div>
-            <span class="bk-sc-badge office">☆ Phù hợp dân văn phòng</span>
-          </div>
-          <div class="bk-sc-price">
-            <div class="bk-sc-dur">⏱ 75 phút</div>
-            <div class="bk-sc-amt">369K</div>
-          </div>
-          <div class="bk-sc-radio"></div>
         </div>
 
-        <div class="bk-sc" data-svc="Chăm sóc dưỡng da toàn thân" onclick="bkSvc(this)">
-          <div class="bk-sc-img">
-            <div class="bk-sc-img-inner">🧴</div>
-            <div class="bk-sc-ico">🌺</div>
-          </div>
-          <div class="bk-sc-body">
-            <div class="bk-sc-name">Chăm Sóc Dưỡng Da Toàn Thân</div>
-            <div class="bk-sc-desc">Dưỡng da body từ thảo mộc tự nhiên 100%</div>
-            <span class="bk-sc-badge save">🌿 Thảo mộc 100%</span>
-          </div>
-          <div class="bk-sc-price">
-            <div class="bk-sc-dur">⏱ 60 phút</div>
-            <div class="bk-sc-amt">350K</div>
-          </div>
-          <div class="bk-sc-radio"></div>
-        </div>
-
-        <div class="bk-sc" data-svc="Gội đầu não an thần — Brain Sedator" onclick="bkSvc(this)">
-          <div class="bk-sc-img">
-            <div class="bk-sc-img-inner">🧠</div>
-            <div class="bk-sc-ico">🌙</div>
-          </div>
-          <div class="bk-sc-body">
-            <div class="bk-sc-name">Gội Đầu Não An Thần</div>
-            <div class="bk-sc-desc">Brain Sedator — Thư giãn não bộ, giảm stress sâu</div>
-            <span class="bk-sc-badge hot">🔥 Đặc trị</span>
-          </div>
-          <div class="bk-sc-price">
-            <div class="bk-sc-dur">⏱ 60 phút</div>
-            <div class="bk-sc-amt">249K</div>
-          </div>
-          <div class="bk-sc-radio"></div>
-        </div>
-
-      </div>
+      </div><!-- /bk-acc-wrap -->
       <div class="bk-svc-em" id="bk-svc-em">⚠ Vui lòng chọn ít nhất 1 dịch vụ</div>
 
       <div class="bk-form-wrap">
@@ -2296,7 +2485,60 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
       '<div class="bk-sum-row"><strong>Số người</strong><span>'+S.guests+'</span></div>';
   }
 
-  /* Service toggle */
+  /* ── ACCORDION TOGGLE ── */
+  var accOpen={body:false,massage:false,face:false,hair:false};
+  window.bkAccToggle=function(grp){
+    var wasOpen=accOpen[grp];
+    // close all
+    ['body','massage','face','hair'].forEach(function(g){
+      if(accOpen[g]){
+        accOpen[g]=false;
+        document.getElementById('bk-acc-'+g).style.display='none';
+        document.getElementById('bk-arr-'+g).style.transform='';
+        document.getElementById('bk-arr-'+g).style.color='';
+        document.getElementById('bk-grp-'+g).classList.remove('open');
+      }
+    });
+    if(!wasOpen){
+      accOpen[grp]=true;
+      document.getElementById('bk-acc-'+grp).style.display='block';
+      document.getElementById('bk-arr-'+grp).style.transform='rotate(90deg)';
+      document.getElementById('bk-arr-'+grp).style.color='#B8852E';
+      document.getElementById('bk-grp-'+grp).classList.add('open');
+    }
+  };
+
+  /* ── SERVICE ROW TOGGLE ── */
+  window.bkToggleSvc=function(row){
+    row.classList.toggle('on');
+    var v=row.dataset.svc,i=S.svcs.indexOf(v);
+    i===-1?S.svcs.push(v):S.svcs.splice(i,1);
+    document.getElementById('bk-svc-em').classList.remove('on');
+    // update counts per group
+    updateAccCounts();
+    // update group border
+    var grpEl=row.closest('.bk-acc-group');
+    if(grpEl){
+      var sel=grpEl.querySelectorAll('.bk-svc-row.on').length;
+      grpEl.classList.toggle('has-sel',sel>0);
+    }
+    if(navigator.vibrate)navigator.vibrate(25);
+  };
+
+  function updateAccCounts(){
+    var map={body:'bk-acc-body',massage:'bk-acc-massage',face:'bk-acc-face',hair:'bk-acc-hair'};
+    Object.keys(map).forEach(function(grp){
+      var panel=document.getElementById(map[grp]);
+      if(!panel)return;
+      var cnt=panel.querySelectorAll('.bk-svc-row.on').length;
+      var el=document.getElementById('bk-cnt-'+grp);
+      if(!el)return;
+      if(cnt>0){el.textContent=cnt;el.classList.add('show');}
+      else{el.textContent='';el.classList.remove('show');}
+    });
+  }
+
+  /* Service toggle (legacy – kept for safety) */
   window.bkSvc=function(card){
     card.classList.toggle('on');
     var v=card.dataset.svc,i=S.svcs.indexOf(v);
@@ -2436,7 +2678,9 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   window.bkReset=function(){
     Object.assign(S,{svcs:[],branch:'',date:'',time:'',guests:'1 người',name:'',phone:'',note:''});
     window._bkStep=1;goingBack=false;
-    document.querySelectorAll('.bk-sc').forEach(function(c){c.classList.remove('on');});
+    document.querySelectorAll('.bk-svc-row').forEach(function(r){r.classList.remove('on');});
+    document.querySelectorAll('.bk-acc-group').forEach(function(g){g.classList.remove('has-sel');});
+    updateAccCounts();
     document.querySelectorAll('.bk-ts').forEach(function(t){t.classList.remove('on');});
     ['bk-branch','bk-date','bk-name','bk-phone','bk-notetxt'].forEach(function(id){
       var el=document.getElementById(id);if(el){el.value='';el.classList.remove('bke');}
