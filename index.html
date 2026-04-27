@@ -1757,6 +1757,9 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     document.body.classList.add('bk-locked');
     document.body.style.top='-'+st+'px';
     document.body.dataset.bkScroll=st;
+    /* Ẩn chat FAB khi modal mở */
+    var fab=document.getElementById('spa-chat-fab');
+    if(fab)fab.style.cssText='visibility:hidden;opacity:0;pointer-events:none;transition:opacity .2s';
   };
   window.bkClose=function(){
     document.getElementById('bk-overlay').classList.remove('open');
@@ -1764,6 +1767,9 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     document.body.classList.remove('bk-locked');
     document.body.style.top='';
     window.scrollTo(0,st);
+    /* Hiện lại chat FAB khi modal đóng */
+    var fab=document.getElementById('spa-chat-fab');
+    if(fab)fab.style.cssText='visibility:visible;opacity:1;pointer-events:all;transition:opacity .3s';
   };
   window.bkOvClick=function(e){if(e.target===document.getElementById('bk-overlay'))bkClose();};
   document.addEventListener('keydown',function(e){if(e.key==='Escape')bkClose();});
