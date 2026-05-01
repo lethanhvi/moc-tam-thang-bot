@@ -1929,103 +1929,151 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
   margin:0 16px 10px;
 }
 
-/* ── ACCORDION GROUPS ── */
-.bk-acc-wrap{padding:4px 16px 4px;}
+/* ══ 2-TIER IMAGE CARDS ══ */
+.bk-acc-wrap{ padding:4px 16px 4px; }
+
+/* ── TIER 1: IMAGE CARD HEADER ── */
 .bk-acc-group{
-  margin-bottom:8px;
-  border-radius:12px;
+  margin-bottom:10px;
+  border-radius:16px;
   overflow:hidden;
-  border:1.5px solid rgba(184,133,46,.18);
+  border:1.5px solid rgba(184,133,46,.2);
   background:#fff;
+  transition:border-color .2s, box-shadow .2s;
 }
 .bk-acc-group.has-sel{
   border-color:#B8852E;
+  box-shadow:0 3px 16px rgba(184,133,46,.18);
 }
+.bk-acc-group.open{
+  border-color:rgba(184,133,46,.5);
+}
+
+/* Header = image card */
 .bk-acc-hd{
-  width:100%;display:flex;align-items:center;gap:10px;
-  padding:14px 16px;
-  background:#fff;border:none;
-  cursor:pointer;
+  width:100%;display:flex;align-items:stretch;
+  padding:0; background:#fff; border:none;
+  cursor:pointer; overflow:hidden;
   -webkit-tap-highlight-color:transparent;
   transition:background .18s;
+  min-height:88px;
 }
-.bk-acc-hd:active{background:#fffbf2;}
-.bk-acc-group.open .bk-acc-hd{background:linear-gradient(135deg,#fffbf3,#fff6e6);}
-.bk-acc-ico{font-size:20px;flex-shrink:0;}
-.bk-acc-label{
-  flex:1;text-align:left;
-  font-family:'Playfair Display',serif;
-  font-size:15px;font-weight:500;color:#2B1A0E;
-}
-.bk-acc-count{
-  font-size:10px;font-weight:600;
-  background:#B8852E;color:#fff;
-  border-radius:10px;padding:2px 7px;
-  font-family:'Be Vietnam Pro',sans-serif;
-  display:none;
-}
-.bk-acc-count.show{display:inline;}
-.bk-acc-arrow{
-  font-size:20px;color:rgba(43,26,14,.3);
-  transition:transform .25s;flex-shrink:0;
-  line-height:1;
-}
-.bk-acc-group.open .bk-acc-arrow{transform:rotate(90deg);color:#B8852E;}
+.bk-acc-hd:active{ opacity:.92; }
 
-/* SERVICE ROWS inside accordion */
+/* Thumbnail left */
+.bk-acc-thumb{
+  width:100px; flex-shrink:0;
+  overflow:hidden; position:relative;
+}
+.bk-acc-thumb img{
+  width:100%; height:100%;
+  object-fit:cover; object-position:center;
+  display:block;
+  transition:transform .4s ease;
+}
+.bk-acc-group.open .bk-acc-thumb img{ transform:scale(1.05); }
+
+/* Text block */
+.bk-acc-text{
+  flex:1; padding:12px 10px 12px 13px;
+  display:flex; flex-direction:column;
+  justify-content:center; text-align:left; min-width:0;
+}
+.bk-acc-label{
+  font-family:'Playfair Display',serif;
+  font-size:14.5px; font-weight:500; color:#2B1A0E;
+  line-height:1.25; margin-bottom:3px;
+}
+.bk-acc-subdesc{
+  font-family:'Be Vietnam Pro',sans-serif;
+  font-size:11px; color:rgba(43,26,14,.45);
+  line-height:1.45; margin-bottom:6px; font-weight:300;
+}
+.bk-acc-meta{
+  display:flex; align-items:center; gap:7px;
+  font-family:'Be Vietnam Pro',sans-serif; font-size:11px;
+}
+.bk-acc-dur{ color:rgba(43,26,14,.45); display:flex; align-items:center; gap:3px; }
+.bk-acc-dur svg{ width:11px; height:11px; opacity:.5; flex-shrink:0; }
+.bk-acc-sep{ color:rgba(184,133,46,.3); }
+.bk-acc-frompr{ font-weight:700; font-size:12px; color:#B8852E; }
+.bk-acc-group.has-sel .bk-acc-frompr{ color:#3A5028; }
+
+/* Count badge */
+.bk-acc-count{
+  font-size:10px; font-weight:700;
+  background:#B8852E; color:#fff;
+  border-radius:10px; padding:2px 7px;
+  font-family:'Be Vietnam Pro',sans-serif;
+  display:none; margin-right:2px;
+}
+.bk-acc-count.show{ display:inline; }
+
+/* Arrow */
+.bk-acc-arrow{
+  display:flex; align-items:center;
+  padding:0 12px 0 4px;
+  color:rgba(184,133,46,.35); font-size:18px;
+  flex-shrink:0; transition:transform .25s, color .2s;
+}
+.bk-acc-group.open .bk-acc-arrow{ transform:rotate(90deg); color:#B8852E; }
+
+/* ── TIER 2: SERVICE ROWS ── */
 .bk-acc-body{
   border-top:1px solid rgba(184,133,46,.12);
   background:#fdf8f0;
+  /* smooth expand/collapse */
+  overflow:hidden;
+  max-height:0;
+  transition:max-height .32s cubic-bezier(.4,0,.2,1);
 }
+.bk-acc-group.open .bk-acc-body{ max-height:2000px; }
+
 .bk-svc-row{
-  display:flex;align-items:center;gap:10px;
+  display:flex; align-items:center; gap:10px;
   padding:12px 16px;
   cursor:pointer;
   transition:background .15s;
   border-bottom:1px solid rgba(184,133,46,.08);
   -webkit-tap-highlight-color:transparent;
 }
-.bk-svc-row:last-child{border-bottom:none;}
-.bk-svc-row:active{background:rgba(184,133,46,.08);}
-.bk-svc-row.on{background:rgba(58,80,40,.06);}
-.bk-svc-info{flex:1;min-width:0;}
+.bk-svc-row:last-child{ border-bottom:none; }
+.bk-svc-row:active{ background:rgba(184,133,46,.08); }
+.bk-svc-row.on{ background:rgba(58,80,40,.06); }
+
+.bk-svc-info{ flex:1; min-width:0; }
 .bk-svc-name{
   display:block;
   font-family:'Be Vietnam Pro',sans-serif;
-  font-size:13px;font-weight:400;color:#2B1A0E;
-  line-height:1.4;
+  font-size:13px; font-weight:400; color:#2B1A0E; line-height:1.4;
 }
-.bk-svc-row.on .bk-svc-name{color:#3A5028;font-weight:500;}
+.bk-svc-row.on .bk-svc-name{ color:#3A5028; font-weight:500; }
 .bk-svc-dur{
-  display:inline-block;margin-top:2px;
-  font-size:10px;color:rgba(43,26,14,.4);
+  display:inline-block; margin-top:2px;
+  font-size:10px; color:rgba(43,26,14,.4);
   font-family:'Be Vietnam Pro',sans-serif;
 }
 .bk-svc-tag{
-  display:inline-block;margin-top:2px;
-  font-size:10px;
-  font-family:'Be Vietnam Pro',sans-serif;
-  color:#c0450a;font-weight:500;
+  display:inline-block; margin-top:2px;
+  font-size:10px; font-family:'Be Vietnam Pro',sans-serif;
+  color:#c0450a; font-weight:500;
 }
-.bk-svc-hot .bk-svc-name{font-weight:500;}
+.bk-svc-hot .bk-svc-name{ font-weight:500; }
 .bk-svc-p{
-  font-size:13px;font-weight:600;
-  color:#B8852E;
-  font-family:'Be Vietnam Pro',sans-serif;
-  white-space:nowrap;flex-shrink:0;
+  font-size:13px; font-weight:600; color:#B8852E;
+  font-family:'Be Vietnam Pro',sans-serif; white-space:nowrap; flex-shrink:0;
 }
-.bk-svc-row.on .bk-svc-p{color:#3A5028;}
+.bk-svc-row.on .bk-svc-p{ color:#3A5028; }
 .bk-svc-chk{
-  width:20px;height:20px;border-radius:50%;
+  width:20px; height:20px; border-radius:50%;
   border:1.5px solid rgba(184,133,46,.3);
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  transition:all .18s;font-size:11px;color:transparent;
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  transition:all .18s; font-size:11px; color:transparent;
 }
 .bk-svc-row.on .bk-svc-chk{
-  background:#3A5028;border-color:#3A5028;
-  color:#fff;content:'✓';
+  background:#3A5028; border-color:#3A5028; color:#fff;
 }
-.bk-svc-row.on .bk-svc-chk::after{content:'✓';}
+.bk-svc-row.on .bk-svc-chk::after{ content:'✓'; }
 
 @media(max-width:380px){
   .bk-ts-wrap{grid-template-columns:repeat(3,1fr);}
@@ -2079,12 +2127,22 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
         <!-- GROUP 1: TOÀN THÂN & CHĂM SÓC -->
         <div class="bk-acc-group" id="bk-grp-body">
           <button class="bk-acc-hd" onclick="bkAccToggle('body')">
-            <span class="bk-acc-ico">💆</span>
-            <span class="bk-acc-label">Toàn Thân &amp; Chăm Sóc</span>
+            <div class="bk-acc-thumb">
+              <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=200&h=180&fit=crop&crop=center" alt="Toàn Thân" loading="lazy">
+            </div>
+            <div class="bk-acc-text">
+              <div class="bk-acc-label">Toàn Thân &amp; Chăm Sóc</div>
+              <div class="bk-acc-subdesc">Tắm hấp, tẩy da chết, ngâm chân, massage chân đông y.</div>
+              <div class="bk-acc-meta">
+                <span class="bk-acc-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>60 phút+</span>
+                <span class="bk-acc-sep">|</span>
+                <span class="bk-acc-frompr">từ 49K</span>
+              </div>
+            </div>
             <span class="bk-acc-count" id="bk-cnt-body"></span>
             <span class="bk-acc-arrow" id="bk-arr-body">›</span>
           </button>
-          <div class="bk-acc-body" id="bk-acc-body" style="display:none">
+          <div class="bk-acc-body" id="bk-acc-body">
             <div class="bk-svc-row" data-svc="Chăm sóc dưỡng da toàn thân" onclick="bkToggleSvc(this)">
               <div class="bk-svc-info"><span class="bk-svc-name">Chăm sóc dưỡng da toàn thân</span><span class="bk-svc-dur">60 phút</span></div>
               <span class="bk-svc-p">350K</span><span class="bk-svc-chk"></span>
@@ -2123,12 +2181,22 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
         <!-- GROUP 2: MASSAGE TRỊ LIỆU -->
         <div class="bk-acc-group" id="bk-grp-massage">
           <button class="bk-acc-hd" onclick="bkAccToggle('massage')">
-            <span class="bk-acc-ico">🌿</span>
-            <span class="bk-acc-label">Massage Trị Liệu</span>
+            <div class="bk-acc-thumb">
+              <img src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=200&h=180&fit=crop&crop=center" alt="Massage Trị Liệu" loading="lazy">
+            </div>
+            <div class="bk-acc-text">
+              <div class="bk-acc-label">Massage Trị Liệu</div>
+              <div class="bk-acc-subdesc">Giảm đau vai gáy, lưng, eo. Thông kinh lạc đông y.</div>
+              <div class="bk-acc-meta">
+                <span class="bk-acc-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>60 – 90 phút</span>
+                <span class="bk-acc-sep">|</span>
+                <span class="bk-acc-frompr">từ 200K</span>
+              </div>
+            </div>
             <span class="bk-acc-count" id="bk-cnt-massage"></span>
             <span class="bk-acc-arrow" id="bk-arr-massage">›</span>
           </button>
-          <div class="bk-acc-body" id="bk-acc-massage" style="display:none">
+          <div class="bk-acc-body" id="bk-acc-massage">
             <div class="bk-svc-row bk-svc-hot" data-svc="Massage body dưỡng sinh đông y VIP" onclick="bkToggleSvc(this)">
               <div class="bk-svc-info"><span class="bk-svc-name">Massage body dưỡng sinh đông y VIP</span><span class="bk-svc-tag">💎 VIP · 90 phút</span></div>
               <span class="bk-svc-p">520K</span><span class="bk-svc-chk"></span>
@@ -2163,12 +2231,22 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
         <!-- GROUP 3: CHĂM SÓC DA MẶT -->
         <div class="bk-acc-group" id="bk-grp-face">
           <button class="bk-acc-hd" onclick="bkAccToggle('face')">
-            <span class="bk-acc-ico">✨</span>
-            <span class="bk-acc-label">Chăm Sóc Da Mặt</span>
+            <div class="bk-acc-thumb">
+              <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=200&h=180&fit=crop&crop=center" alt="Chăm Sóc Da Mặt" loading="lazy">
+            </div>
+            <div class="bk-acc-text">
+              <div class="bk-acc-label">Chăm Sóc Da Mặt</div>
+              <div class="bk-acc-subdesc">Làm sạch sâu, đắp mặt nạ, điều trị thâm nám, dưỡng da.</div>
+              <div class="bk-acc-meta">
+                <span class="bk-acc-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>45 – 60 phút</span>
+                <span class="bk-acc-sep">|</span>
+                <span class="bk-acc-frompr">từ 49K</span>
+              </div>
+            </div>
             <span class="bk-acc-count" id="bk-cnt-face"></span>
             <span class="bk-acc-arrow" id="bk-arr-face">›</span>
           </button>
-          <div class="bk-acc-body" id="bk-acc-face" style="display:none">
+          <div class="bk-acc-body" id="bk-acc-face">
             <div class="bk-svc-row bk-svc-hot" data-svc="Điều trị thâm nám liệu trình" onclick="bkToggleSvc(this)">
               <div class="bk-svc-info"><span class="bk-svc-name">Điều trị thâm nám liệu trình</span><span class="bk-svc-tag">🔥 Đặc trị</span></div>
               <span class="bk-svc-p">1.500K</span><span class="bk-svc-chk"></span>
@@ -2223,12 +2301,22 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
         <!-- GROUP 4: GỘI ĐẦU & TÓC -->
         <div class="bk-acc-group" id="bk-grp-hair">
           <button class="bk-acc-hd" onclick="bkAccToggle('hair')">
-            <span class="bk-acc-ico">🌸</span>
-            <span class="bk-acc-label">Gội Đầu &amp; Tóc</span>
+            <div class="bk-acc-thumb">
+              <img src="https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?w=200&h=180&fit=crop&crop=center" alt="Gội Đầu & Tóc" loading="lazy">
+            </div>
+            <div class="bk-acc-text">
+              <div class="bk-acc-label">Gội Đầu &amp; Tóc</div>
+              <div class="bk-acc-subdesc">Gội thảo mộc, collagen, dưỡng sinh, não an thần.</div>
+              <div class="bk-acc-meta">
+                <span class="bk-acc-dur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>30 – 45 phút</span>
+                <span class="bk-acc-sep">|</span>
+                <span class="bk-acc-frompr">từ 69K</span>
+              </div>
+            </div>
             <span class="bk-acc-count" id="bk-cnt-hair"></span>
             <span class="bk-acc-arrow" id="bk-arr-hair">›</span>
           </button>
-          <div class="bk-acc-body" id="bk-acc-hair" style="display:none">
+          <div class="bk-acc-body" id="bk-acc-hair">
             <div class="bk-svc-row bk-svc-hot" data-svc="Gội đầu não an thần — Brain Sedator" onclick="bkToggleSvc(this)">
               <div class="bk-svc-info"><span class="bk-svc-name">Gội đầu não an thần — Brain Sedator</span><span class="bk-svc-tag">🔥 Đặc trị</span></div>
               <span class="bk-svc-p">249K</span><span class="bk-svc-chk"></span>
@@ -2280,6 +2368,23 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
             <option value="Cơ sở II – H. Bình Sơn">Cơ sở II – Ngã 4 Ký túc xá Hòa Phát, H. Bình Sơn</option>
           </select>
           <div class="bkem" id="bk-branch-em">Vui lòng chọn cơ sở</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px 16px;">
+        <div style="text-align:center;background:rgba(245,236,218,.5);border:1px solid rgba(184,133,46,.15);border-radius:10px;padding:10px 6px;">
+          <div style="font-size:17px;margin-bottom:2px;">👥</div>
+          <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:#2B1A0E;line-height:1.1;">2.000+</div>
+          <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:9px;color:#7A5A38;margin-top:2px;line-height:1.4;">khách tin tưởng</div>
+        </div>
+        <div style="text-align:center;background:rgba(245,236,218,.5);border:1px solid rgba(184,133,46,.15);border-radius:10px;padding:10px 6px;">
+          <div style="font-size:17px;margin-bottom:2px;">⭐</div>
+          <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:#2B1A0E;line-height:1.1;">4.9/5</div>
+          <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:9px;color:#7A5A38;margin-top:2px;line-height:1.4;">đánh giá TB</div>
+        </div>
+        <div style="text-align:center;background:rgba(245,236,218,.5);border:1px solid rgba(184,133,46,.15);border-radius:10px;padding:10px 6px;">
+          <div style="font-size:17px;margin-bottom:2px;">🛡️</div>
+          <div style="font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:#2B1A0E;line-height:1.1;">An toàn</div>
+          <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:9px;color:#7A5A38;margin-top:2px;line-height:1.4;">100% bảo mật</div>
         </div>
       </div>
     </div>
@@ -2493,18 +2598,17 @@ body.bk-locked{position:fixed;width:100%;overflow:hidden;}
     ['body','massage','face','hair'].forEach(function(g){
       if(accOpen[g]){
         accOpen[g]=false;
-        document.getElementById('bk-acc-'+g).style.display='none';
-        document.getElementById('bk-arr-'+g).style.transform='';
-        document.getElementById('bk-arr-'+g).style.color='';
         document.getElementById('bk-grp-'+g).classList.remove('open');
       }
     });
     if(!wasOpen){
       accOpen[grp]=true;
-      document.getElementById('bk-acc-'+grp).style.display='block';
-      document.getElementById('bk-arr-'+grp).style.transform='rotate(90deg)';
-      document.getElementById('bk-arr-'+grp).style.color='#B8852E';
       document.getElementById('bk-grp-'+grp).classList.add('open');
+      // Scroll card into view nicely
+      setTimeout(function(){
+        var el=document.getElementById('bk-grp-'+grp);
+        if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
+      },50);
     }
   };
 
